@@ -2,6 +2,11 @@
   var vm, fs, path, bootSC, Worker, e, wt;
   vm = require('vm');
   fs = require('fs');
+  http = require('http');
+  http_sync = require('/home/ale/etherdev/http-sync.js');
+  sys = require('sys');
+  //execSync = require('exec-sync');
+  XMLHttpRequest = require('xmlhttprequest');
   argv = require('optimist').argv;
   path = require('path');
   bootSC = fs.readFileSync(path.dirname(fs.realpathSync(__filename)) + "/SocialCalcModule.js", 'utf8');
@@ -24,12 +29,15 @@
           var vm, cxt, sandbox, this$ = this;
           vm = require('vm');
           cxt = {
-            console: console,
+            console: console, sys:sys, jason: JSON, http_sync:http_sync,
+            http: http, XMLHttpRequest:XMLHttpRequest,
             self: {
               onmessage: function(){}
             }
           };
           cxt.window = {
+            http: http, XMLHttpRequest:XMLHttpRequest,
+            console: console, sys:sys, jason: JSON, 
             setTimeout: function(cb, ms){
               return process.nextTick(cb);
             },
@@ -134,6 +142,11 @@
             return postMessage({
               type: 'csv',
               csv: csv
+            });
+          case 'exportCells':
+            return postMessage({
+              type: 'cells',
+              cells: window.ss.cells
             });
           case 'init':
             SocialCalc.SaveEditorSettings = function(){
@@ -392,13 +405,38 @@
         });
       };
       w.exportCSV = function(cb){
+	// rimetti la riga sotto era un test
         return w.thread.eval('window.ss.SocialCalc.ConvertSaveToOtherFormat(\n  window.ss.CreateSheetSave(), "csv"\n)', function(err, csv){
+	//return w.thread.eval('window.ss.CreateSheetSave()', function(err, csv){
+          return cb(csv);
+        });
+      };
+      w.exportCSVcolumn_test = function(cb,colnum){
+	// poi dovrai modificare anche il parsing dei messaggi, forse, credo, se lo vuoi fare da browser
+        return w.thread.eval('window.ss.SocialCalc.ConvertSaveToColumn(\n  window.ss.CreateSheetSave(), "csv",false,colnum\n)', function(err, csv){
+	//return w.thread.eval('window.ss.CreateSheetSave()', function(err, csv){
+          return cb(csv);
+        });
+      };
+      w.exportCSVcolumn = function(cb){
+	// poi dovrai modificare anche il parsing dei messaggi, forse, credo, se lo vuoi fare da browser
+        return w.thread.eval('window.ss.SocialCalc.ConvertSaveToColumn(\n  window.ss.CreateSheetSave(), "csv"\n)', function(err, csv){
           return cb(csv);
         });
       };
       w.exportSave = function(cb){
         return w.thread.eval('window.ss.CreateSheetSave()', function(err, save){
           return cb(save);
+        });
+      };
+      w.exportCell = function(coord, cb){
+        return w.thread.eval("JSON.stringify(window.ss.sheet.cells[" + JSON.stringify(coord).replace(/\s/g, '') + "])", function(_, cell){
+          return cb(cell);
+        });
+      };
+      w.exportCells = function(cb){
+        return w.thread.eval('JSON.stringify(window.ss.sheet.cells)', function(_, cells){
+          return cb(cells);
         });
       };
       return w;

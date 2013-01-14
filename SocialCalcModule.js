@@ -6740,6 +6740,75 @@ SocialCalc.ConvertSaveToOtherFormat = function(savestr, outputformat, dorecalc) 
 
    }
 
+//
+// result = SocialCalc.ConvertSaveToColumn(savestr, outputformat, dorecalc)
+// Dirty hack to exprt a single column as a single line CSV for use in MT, supports "csv" only of the the format below, and only does column 2 for now
+// Returns a string in the specificed format: "scsave", "html", "csv", "tab" (tab delimited)
+// If dorecalc is true, performs a recalc after loading (NO: obsolete!).
+//
+
+SocialCalc.ConvertSaveToColumn = function(savestr, outputformat, dorecalc,columnnumber) {
+
+   var sheet, context, clipextents, div, ele, row, col, cr, cell, str;
+
+   var result = "";
+
+   if (outputformat == "scsave") {
+      return savestr;
+      }
+
+   if (savestr == "") {
+      return "";
+      }
+
+   sheet = new SocialCalc.Sheet();
+   sheet.ParseSheetSave(savestr);
+
+   if (dorecalc) {
+      // no longer supported as of 9/10/08
+      // Recalc is now async, so can't do it this way
+      throw("SocialCalc.ConvertSaveToOtherFormat: Not doing recalc.");
+      }
+
+   if (sheet.copiedfrom) {
+      clipextents = SocialCalc.ParseRange(sheet.copiedfrom);
+      }
+   else {
+      clipextents = {cr1: {row: 1, col: 1}, cr2: {row: sheet.attribs.lastrow, col: sheet.attribs.lastcol}};
+      }
+
+   for (row = clipextents.cr1.row; row <= clipextents.cr2.row; row++) {
+      for (col = 5; col <= 5; col++) {
+         cr = SocialCalc.crToCoord(col, row);
+         cell = sheet.GetAssuredCell(cr);
+	 console.log((cell));
+
+         if (cell.errors) {
+            str = cell.errors;
+            }
+         else {
+            str = cell.datavalue+""; // get value as text
+            }
+
+         if (outputformat == "csv") {
+            if (str.indexOf('"')!=-1) {
+               str = str.replace(/"/g, '""'); // double quotes
+               }
+            if (/[, \n"]/.test(str)) {
+               str = '"' + str + '"'; // add quotes
+               }
+            //if (col>clipextents.cr1.col) { str = "," + str;  } // youd add commas if you werent exporting by col
+            }
+
+         result += str;
+         }
+      //result += "\n";
+      result += ",";	
+      }
+
+   return result;
+
+   }
 
 //
 // result = SocialCalc.ConvertOtherFormatToSave(inputstr, inputformat)
@@ -16253,6 +16322,15 @@ SocialCalc.Formula.SeriesFunctions = function(fname, operand, foperand, sheet) {
             }
          break;
 
+      case "OTTANTAQUATTRO":
+         if (count > 0) {
+            PushOperand("n", 84);
+            }
+         else {
+            PushOperand("n", -84);
+            }
+         break;
+
       case "STDEV":
          if (count > 1) {
             PushOperand(resulttypesum, Math.sqrt(sk / (count - 1))); // sk is never negative according to Knuth
@@ -16303,6 +16381,7 @@ SocialCalc.Formula.FunctionList["MAX"] = [SocialCalc.Formula.SeriesFunctions, -1
 SocialCalc.Formula.FunctionList["MIN"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["PRODUCT"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["STDEV"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
+SocialCalc.Formula.FunctionList["OTTANTAQUATTRO"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["STDEVP"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["SUM"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["VAR"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
@@ -17386,6 +17465,9 @@ SocialCalc.Formula.ArgList = {
                 RIGHT: [1, 0],
                 SUBSTITUTE: [1, 1, 1, 0],
                 TRIM: [1],
+		CIAO: [1],
+		JGET: [1],
+		QUOTE: [1],
                 UPPER: [1]
                };
 
@@ -17575,6 +17657,65 @@ SocialCalc.Formula.StringFunctions = function(fname, operand, foperand, sheet) {
          resulttype = "t";
          break;
 
+      case "CIAO":
+         result = "ciaociao";
+         resulttype = "t";
+         break;
+
+      case "JGET":
+if (typeof this.navigator != 'undefined') {
+     var request = new XMLHttpRequest();
+	console.log("ECCHILO");
+	//request.open('GET', operand_value[1], false); 
+	request.open('GET', "http://192.168.0.98:7379/HGET/"+operand_value[1]+".txt", false); 
+	request.send(null);
+ 	//if (request.status === 200) {        console.log(request.responseText);        }
+         result = request.responseText;}
+else
+{
+
+var req = http_sync.request({
+  host: '192.168.0.98',
+  port: 7379,
+  path: '/HGET/'+operand_value[1]+".txt",
+});
+
+var res = req.end();
+console.log(res);
+console.log(res.body.toString());
+
+result=res.body.toString();
+
+}
+         resulttype = "t";
+         break;
+
+      case "QUOTE":
+if (typeof this.navigator != 'undefined') {
+     var request = new XMLHttpRequest();
+	request.open('GET', "http://192.168.0.98:7379/HGET/quotes/"+operand_value[1]+".txt", false); 
+	request.send(null);
+ 	//if (request.status === 200) {        console.log(request.responseText);        }
+         result = request.responseText;
+}
+else { 
+
+var req = http_sync.request({
+  host: '192.168.0.98',
+  port: 7379,
+  path: '/HGET/quotes/'+operand_value[1]+".txt",
+});
+
+var res = req.end();
+console.log(res);
+console.log(res.body.toString());
+
+result=res.body.toString();
+}
+         resulttype = "n";
+         break;
+
+
       }
 
    scf.PushOperand(operand, resulttype, result);
@@ -17594,6 +17735,9 @@ SocialCalc.Formula.FunctionList["RIGHT"] = [SocialCalc.Formula.StringFunctions, 
 SocialCalc.Formula.FunctionList["SUBSTITUTE"] = [SocialCalc.Formula.StringFunctions, -3, "subs", "", "text"];
 SocialCalc.Formula.FunctionList["TRIM"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
 SocialCalc.Formula.FunctionList["UPPER"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
+SocialCalc.Formula.FunctionList["CIAO"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
+SocialCalc.Formula.FunctionList["JGET"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
+SocialCalc.Formula.FunctionList["QUOTE"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
 
 /*
 #
@@ -25230,6 +25374,14 @@ str = str.replace(/([^\n])\r([^\n])/g, "$1\r\n$2");
 if (typeof global != 'undefined') var window = global;
 if (typeof SocialCalc != 'undefined' && typeof module != 'undefined') module.exports = SocialCalc;
 if (typeof document == 'undefined') var document = SocialCalc.document = {};
+
+// Compatibility with webworker-threads
+if (typeof self !== 'undefined' && self.thread) {
+    window.setTimeout = function (cb, ms) {
+        if (ms <= 1) { self.thread.nextTick(cb); }
+    };
+    window.clearTimeout = function () {};
+}
 
 // We don't really need a DOM-based presentation layer for embedded SC.
 SocialCalc.GetEditorCellElement = function () {};

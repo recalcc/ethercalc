@@ -104,21 +104,28 @@
     };
     this.get({
       '/_/:room/cells/:cell': api(function(){
-        return [Json, JSON.stringify(SC[this.room].sheet.cells[this.cell])];
+        var this$ = this;
+        return [
+          Json, function(sc, cb){
+            return sc.exportCell(this$.cell, cb);
+          }
+        ];
       })
     });
     this.get({
       '/_/:room/cells': api(function(){
-        return [Json, JSON.stringify(SC[this.room].sheet.cells)];
+        return [
+          Json, function(sc, cb){
+            return sc.exportCells(cb);
+          }
+        ];
       })
     });
     this.get({
       '/_/:room/html': api(function(){
         return [
           Html, function(sc, cb){
-            return sc.exportHTML(function(html){
-              return cb(html);
-            });
+            return sc.exportHTML(cb);
           }
         ];
       })
@@ -127,9 +134,27 @@
       '/_/:room/csv': api(function(){
         return [
           Csv, function(sc, cb){
-            return sc.exportCSV(function(csv){
-              return cb(csv);
-            });
+            return sc.exportCSV(cb);
+          }
+        ];
+      })
+    });
+    this.get({
+      '/_/:room/coltwo': api(function(){
+        return [
+          Csv, function(sc, cb){
+            return sc.exportCSVcolumn(cb);
+          }
+        ];
+      })
+    });
+    this.get({
+      '/_/:room/col/:colnum': api(function(){
+        var this$ = this; // god knows why
+        //console.log("requested column number:"+this$.colnum);
+        return [
+          Csv, function(sc, cb){
+            return sc.exportCSVcolumn(cb,this$.colnum);
           }
         ];
       })

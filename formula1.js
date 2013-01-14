@@ -1896,6 +1896,15 @@ SocialCalc.Formula.SeriesFunctions = function(fname, operand, foperand, sheet) {
             }
          break;
 
+      case "OTTANTAQUATTRO":
+         if (count > 0) {
+            PushOperand("n", 84);
+            }
+         else {
+            PushOperand("n", -84);
+            }
+         break;
+
       case "STDEV":
          if (count > 1) {
             PushOperand(resulttypesum, Math.sqrt(sk / (count - 1))); // sk is never negative according to Knuth
@@ -1946,6 +1955,7 @@ SocialCalc.Formula.FunctionList["MAX"] = [SocialCalc.Formula.SeriesFunctions, -1
 SocialCalc.Formula.FunctionList["MIN"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["PRODUCT"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["STDEV"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
+SocialCalc.Formula.FunctionList["OTTANTAQUATTRO"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["STDEVP"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["SUM"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["VAR"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
@@ -3029,6 +3039,9 @@ SocialCalc.Formula.ArgList = {
                 RIGHT: [1, 0],
                 SUBSTITUTE: [1, 1, 1, 0],
                 TRIM: [1],
+		CIAO: [1],
+		JGET: [1],
+		QUOTE: [1],
                 UPPER: [1]
                };
 
@@ -3218,6 +3231,65 @@ SocialCalc.Formula.StringFunctions = function(fname, operand, foperand, sheet) {
          resulttype = "t";
          break;
 
+      case "CIAO":
+         result = "ciaociao";
+         resulttype = "t";
+         break;
+
+      case "JGET":
+if (typeof this.navigator != 'undefined') {
+     var request = new XMLHttpRequest();
+	console.log("ECCHILO");
+	//request.open('GET', operand_value[1], false); 
+	request.open('GET', "http://192.168.0.98:7379/HGET/"+operand_value[1]+".txt", false); 
+	request.send(null);
+ 	//if (request.status === 200) {        console.log(request.responseText);        }
+         result = request.responseText;}
+else
+{
+
+var req = http_sync.request({
+  host: '192.168.0.98',
+  port: 7379,
+  path: '/HGET/'+operand_value[1]+".txt",
+});
+
+var res = req.end();
+console.log(res);
+console.log(res.body.toString());
+
+result=res.body.toString();
+
+}
+         resulttype = "t";
+         break;
+
+      case "QUOTE":
+if (typeof this.navigator != 'undefined') {
+     var request = new XMLHttpRequest();
+	request.open('GET', "http://192.168.0.98:7379/HGET/quotes/"+operand_value[1]+".txt", false); 
+	request.send(null);
+ 	//if (request.status === 200) {        console.log(request.responseText);        }
+         result = request.responseText;
+}
+else { 
+
+var req = http_sync.request({
+  host: '192.168.0.98',
+  port: 7379,
+  path: '/HGET/quotes/'+operand_value[1]+".txt",
+});
+
+var res = req.end();
+console.log(res);
+console.log(res.body.toString());
+
+result=res.body.toString();
+}
+         resulttype = "t";
+         break;
+
+
       }
 
    scf.PushOperand(operand, resulttype, result);
@@ -3237,6 +3309,9 @@ SocialCalc.Formula.FunctionList["RIGHT"] = [SocialCalc.Formula.StringFunctions, 
 SocialCalc.Formula.FunctionList["SUBSTITUTE"] = [SocialCalc.Formula.StringFunctions, -3, "subs", "", "text"];
 SocialCalc.Formula.FunctionList["TRIM"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
 SocialCalc.Formula.FunctionList["UPPER"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
+SocialCalc.Formula.FunctionList["CIAO"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
+SocialCalc.Formula.FunctionList["JGET"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
+SocialCalc.Formula.FunctionList["QUOTE"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
 
 /*
 #
