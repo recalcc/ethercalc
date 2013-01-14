@@ -6747,11 +6747,13 @@ SocialCalc.ConvertSaveToOtherFormat = function(savestr, outputformat, dorecalc) 
 // If dorecalc is true, performs a recalc after loading (NO: obsolete!).
 //
 
-SocialCalc.ConvertSaveToColumn = function(savestr, outputformat, dorecalc,columnnumber) {
+SocialCalc.ConvertSaveToColumn = function(savestr, outputformat, dorecalc, columnnumber) {
 
    var sheet, context, clipextents, div, ele, row, col, cr, cell, str;
 
    var result = "";
+
+   if (columnnumber == undefined) columnnumber = 2;
 
    if (outputformat == "scsave") {
       return savestr;
@@ -6778,7 +6780,7 @@ SocialCalc.ConvertSaveToColumn = function(savestr, outputformat, dorecalc,column
       }
 
    for (row = clipextents.cr1.row; row <= clipextents.cr2.row; row++) {
-      for (col = 5; col <= 5; col++) {
+      for (col = columnnumber; col <= columnnumber; col++) { //ridiculous i know
          cr = SocialCalc.crToCoord(col, row);
          cell = sheet.GetAssuredCell(cr);
 	 console.log((cell));

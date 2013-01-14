@@ -411,9 +411,10 @@
           return cb(csv);
         });
       };
-      w.exportCSVcolumn_test = function(cb,colnum){
+      w.exportCSVcolumn_spec = function(cb,colnum){
+	console.log("req colnum:"+colnum);
 	// poi dovrai modificare anche il parsing dei messaggi, forse, credo, se lo vuoi fare da browser
-        return w.thread.eval('window.ss.SocialCalc.ConvertSaveToColumn(\n  window.ss.CreateSheetSave(), "csv",false,colnum\n)', function(err, csv){
+        return w.thread.eval('window.ss.SocialCalc.ConvertSaveToColumn(\n  window.ss.CreateSheetSave(), "csv",false,'+colnum+'\n)', function(err, csv){
 	//return w.thread.eval('window.ss.CreateSheetSave()', function(err, csv){
           return cb(csv);
         });

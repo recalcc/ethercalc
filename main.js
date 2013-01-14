@@ -154,7 +154,7 @@
         //console.log("requested column number:"+this$.colnum);
         return [
           Csv, function(sc, cb){
-            return sc.exportCSVcolumn(cb,this$.colnum);
+            return sc.exportCSVcolumn_spec(cb,this$.colnum);
           }
         ];
       })
