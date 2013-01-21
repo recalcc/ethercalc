@@ -3,7 +3,7 @@
   vm = require('vm');
   fs = require('fs');
   http = require('http');
-  http_sync = require('/home/ale/etherdev/http-sync.js');
+  http_sync = require(process.cwd()+'/http-sync.js');
   sys = require('sys');
   //execSync = require('exec-sync');
   XMLHttpRequest = require('xmlhttprequest');
