@@ -21,13 +21,13 @@ JS_FILES=\
 	app.js dotcloud.js player.js main.js sc.js db.js
 
 all ::
-	env PATH="$$PATH:./node_modules/LiveScript/bin" livescript -c -o . src
-	node app.js
+	#env PATH="$$PATH:./node_modules/LiveScript/bin" livescript -c -o . src
+	node app.js -v
 
 ./node_modules/streamline/bin/_node :
 	npm i --dev
 
-depends :: app.js static/ethercalc.js static/start.css
+depends :: static/ethercalc.js static/start.css
 
 SocialCalcModule.js :: $(SOCIALCALC_FILES) exports.js
 	cat $(SOCIALCALC_FILES) exports.js > $@
