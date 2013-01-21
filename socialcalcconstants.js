@@ -620,6 +620,7 @@ SocialCalc.Constants = {
    s_fdef_AVERAGE: 'Averages the values. ',
    s_fdef_CHOOSE: 'Returns the value specified by the index. The values may be ranges of cells. ',
    s_fdef_COLUMNS: 'Returns the number of columns in the range. ',
+   s_fdef_CORREL: 'Returns Pearsons correlation factor for two ranges. The ranges must be of equal length.',
    s_fdef_COS: 'Trigonometric cosine function (value is in radians). ',
    s_fdef_COUNT: 'Counts the number of numeric values, not blank, text, or error. ',
    s_fdef_COUNTA: 'Counts the number of non-blank values. ',

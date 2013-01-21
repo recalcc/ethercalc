@@ -1896,15 +1896,6 @@ SocialCalc.Formula.SeriesFunctions = function(fname, operand, foperand, sheet) {
             }
          break;
 
-      case "OTTANTAQUATTRO":
-         if (count > 0) {
-            PushOperand("n", 84);
-            }
-         else {
-            PushOperand("n", -84);
-            }
-         break;
-
       case "STDEV":
          if (count > 1) {
             PushOperand(resulttypesum, Math.sqrt(sk / (count - 1))); // sk is never negative according to Knuth
@@ -1955,7 +1946,6 @@ SocialCalc.Formula.FunctionList["MAX"] = [SocialCalc.Formula.SeriesFunctions, -1
 SocialCalc.Formula.FunctionList["MIN"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["PRODUCT"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["STDEV"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
-SocialCalc.Formula.FunctionList["OTTANTAQUATTRO"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["STDEVP"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["SUM"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["VAR"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
@@ -2012,6 +2002,94 @@ SocialCalc.Formula.SumProductFunction = function(fname, operand, foperand, sheet
    }
 
 SocialCalc.Formula.FunctionList["SUMPRODUCT"] = [SocialCalc.Formula.SumProductFunction, -1, "rangen", "", "stat"];
+
+/*
+#
+# CORREL(range1, range2)
+#
+*/
+
+SocialCalc.Formula.CorrelFunction = function(fname, operand, foperand, sheet) {
+
+if (typeof this.navigator == 'undefined') {
+   console.log("fname:"+fname);
+   console.log("operand:"+sys.inspect(operand));
+   console.log("foperand:"+sys.inspect(foperand));
+}
+
+
+   var range,z;
+   var scf = SocialCalc.Formula;
+   var ncols = 0, nrows = 0, noperand = 0;
+   var rangevals=[];
+   var values=[];
+
+   var sum_sq_x,mean_x,delta_x,pop_sd_x;
+   var sum_sq_y,mean_y,delta_y,pop_sd_y;
+   var sweep,cov_x_y,correlation,sum_coproduct;
+
+   var PushOperand = function(t, v) {operand.push({type: t, value: v});};
+
+   while (foperand.length > 0) {
+      values=[];
+      range = scf.TopOfStackValueAndType(sheet, foperand);
+      if (range.type != "range") {
+         PushOperand("e#VALUE!", 0);
+         return;
+         }
+      rangeinfo = scf.DecodeRangeParts(sheet, range.value);
+      if (!ncols) ncols = rangeinfo.ncols;
+      else if (ncols != rangeinfo.ncols) {
+         PushOperand("e#VALUE!", 0);
+         return;
+         }
+      if (!nrows) nrows = rangeinfo.nrows;
+      else if (nrows != rangeinfo.nrows) {
+         PushOperand("e#VALUE!", 0);
+         return;
+         }
+      if (ncols > 1 && nrows > 1) { PushOperand("e#VALUE!", 0); return; }
+      for (i=0; i<rangeinfo.ncols; i++) {
+         for (j=0; j<rangeinfo.nrows; j++) {
+            k = i * rangeinfo.nrows + j;
+            cellcr = SocialCalc.crToCoord(rangeinfo.col1num + i, rangeinfo.row1num + j);
+            cell = rangeinfo.sheetdata.GetAssuredCell(cellcr);
+            value = cell.valuetype == "n" ? cell.datavalue : 0;
+	    values.push(value);	
+            }
+         }
+      rangevals.push(values);
+      }
+
+   if (rangevals[0].length != rangevals[1].length) { PushOperand("e#VALUE!", 0); return; } // ranges must be of same length
+
+   sum_sq_x=0;sum_sq_y=0;
+   sum_coproduct=0;
+   mean_x = rangevals[0][0];
+   mean_y = rangevals[1][0];
+   for (z=1;z<rangevals[0].length;z++) {
+       sweep=(z-1.0)/z;
+       delta_x=rangevals[0][z]-mean_x;
+       delta_y=rangevals[1][z]-mean_y;
+       sum_sq_x += delta_x *delta_x*sweep;
+       sum_sq_y += delta_y *delta_y*sweep;
+       sum_coproduct += delta_x *delta_y*sweep;
+       mean_x+= delta_x /z;
+       mean_y+= delta_y /z;
+   }
+   pop_sd_x=Math.sqrt(sum_sq_x/rangevals[0].length);
+   pop_sd_y=Math.sqrt(sum_sq_y/rangevals[0].length);
+   cov_x_y=sum_coproduct/rangevals[0].length;
+   correlation=cov_x_y/(pop_sd_x * pop_sd_y);
+
+   PushOperand("n", correlation);
+
+   return;
+
+   }
+
+SocialCalc.Formula.FunctionList["CORREL"] = [SocialCalc.Formula.CorrelFunction, 2, "rangen", "", "stat"];
+
 
 /*
 #
@@ -3239,11 +3317,11 @@ SocialCalc.Formula.StringFunctions = function(fname, operand, foperand, sheet) {
       case "JGET":
 if (typeof this.navigator != 'undefined') {
      var request = new XMLHttpRequest();
-	console.log("ECCHILO");
+	//console.log("ECCHILO");
 	//request.open('GET', operand_value[1], false); 
 	request.open('GET', "http://192.168.0.98:7379/HGET/"+operand_value[1]+".txt", false); 
 	request.send(null);
- 	//if (request.status === 200) {        console.log(request.responseText);        }
+ 	//if (request.status === 200) {        //console.log(request.responseText);        }
          result = request.responseText;}
 else
 {
@@ -3255,8 +3333,8 @@ var req = http_sync.request({
 });
 
 var res = req.end();
-console.log(res);
-console.log(res.body.toString());
+//console.log(res);
+//console.log(res.body.toString());
 
 result=res.body.toString();
 
@@ -3269,7 +3347,7 @@ if (typeof this.navigator != 'undefined') {
      var request = new XMLHttpRequest();
 	request.open('GET', "http://192.168.0.98:7379/HGET/quotes/"+operand_value[1]+".txt", false); 
 	request.send(null);
- 	//if (request.status === 200) {        console.log(request.responseText);        }
+ 	//if (request.status === 200) {        //console.log(request.responseText);        }
          result = request.responseText;
 }
 else { 
@@ -3281,8 +3359,8 @@ var req = http_sync.request({
 });
 
 var res = req.end();
-console.log(res);
-console.log(res.body.toString());
+//console.log(res);
+//console.log(res.body.toString());
 
 result=res.body.toString();
 }

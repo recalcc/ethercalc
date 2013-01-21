@@ -31,6 +31,7 @@
 
 var SocialCalc;
 if (!SocialCalc) SocialCalc = {};
+alert=console.log;
 
 // *************************************
 //
@@ -721,6 +722,7 @@ SocialCalc.Constants = {
    s_fdef_WEEKDAY: 'Returns the day of week specified by the date value. If type is 1 (the default), Sunday is day and Saturday is day 7. If type is 2, Monday is day 1 and Sunday is day 7. If type is 3, Monday is day 0 and Sunday is day 6. ',
    s_fdef_YEAR: 'Returns the year part of a date value. ',
    s_fdef_SUMPRODUCT: 'Sums the pairwise products of 2 or more ranges. The ranges must be of equal length.',
+   s_fdef_CORREL: 'Returns Pearsons correlation factor for two ranges. The ranges must be of equal length.',
    s_fdef_CEILING: 'Rounds the given number up to the nearest integer or multiple of significance. Significance is the value to whose multiple of ten the value is to be rounded up (.01, .1, 1, 10, etc.)',
    s_fdef_FLOOR: 'Rounds the given number down to the nearest multiple of significance. Significance is the value to whose multiple of ten the number is to be rounded down (.01, .1, 1, 10, etc.)',
 
@@ -2602,6 +2604,10 @@ SocialCalc.ResumeFromCmdExtension = function(sci) {
 
 SocialCalc.ExecuteSheetCommand = function(sheet, cmd, saveundo) {
 
+
+   //console.log("in ESC ***********************************************************");
+   //console.log(cmd);
+
    var cmdstr, cmd1, rest, what, attrib, num, pos, pos2, errortext, undostart, val;
    var cr1, cr2, col, row, cr, cell, newcell;
    var fillright, rowstart, colstart, crbase, rowoffset, coloffset, basecell;
@@ -2791,7 +2797,7 @@ SocialCalc.ExecuteSheetCommand = function(sheet, cmd, saveundo) {
                   cr = SocialCalc.crToCoord(col, row);
                   cell=sheet.GetAssuredCell(cr);
                   if (cell.readonly && attrib!="readonly") continue;
-                  if (saveundo) changes.AddUndo("set "+cr+" all", sheet.CellToString(cell));
+                  if (saveundo) changes.AddUndo("set "+cr+" all", sheet.CellToString(cell)); //console.log( sheet.CellToString(cell) );
                   if (attrib=="value") { // set coord value type numeric-value
                      pos = rest.indexOf(" ");
                      cell.datavalue = rest.substring(pos+1)-0;
@@ -6747,11 +6753,13 @@ SocialCalc.ConvertSaveToOtherFormat = function(savestr, outputformat, dorecalc) 
 // If dorecalc is true, performs a recalc after loading (NO: obsolete!).
 //
 
-SocialCalc.ConvertSaveToColumn = function(savestr, outputformat, dorecalc) {
+SocialCalc.ConvertSaveToColumn = function(savestr, outputformat, dorecalc, columnnumber) {
 
    var sheet, context, clipextents, div, ele, row, col, cr, cell, str;
 
    var result = "";
+
+   if (columnnumber == undefined) columnnumber = 2;
 
    if (outputformat == "scsave") {
       return savestr;
@@ -6778,10 +6786,10 @@ SocialCalc.ConvertSaveToColumn = function(savestr, outputformat, dorecalc) {
       }
 
    for (row = clipextents.cr1.row; row <= clipextents.cr2.row; row++) {
-      for (col = 2; col <= 2; col++) {
+      for (col = columnnumber; col <= columnnumber; col++) { //ridiculous i know
          cr = SocialCalc.crToCoord(col, row);
          cell = sheet.GetAssuredCell(cr);
-	 console.log((cell));
+	 //console.log((cell));
 
          if (cell.errors) {
             str = cell.errors;
@@ -6797,9 +6805,7 @@ SocialCalc.ConvertSaveToColumn = function(savestr, outputformat, dorecalc) {
             if (/[, \n"]/.test(str)) {
                str = '"' + str + '"'; // add quotes
                }
-            if (col>clipextents.cr1.col) {
-               str = "," + str; // add commas
-               }
+            //if (col>clipextents.cr1.col) { str = "," + str;  } // youd add commas if you werent exporting by col
             }
 
          result += str;
@@ -15234,6 +15240,8 @@ SocialCalc.Formula.EvaluatePolish = function(parseinfo, revpolish, sheet, allowr
 
       else if (ttype == tokentype.name) {
          errortext = scf.CalculateFunction(ttext, operand, sheet);
+         console.log("ttext:"+ttext);
+         console.log("opera:"+sys.inspect(operand));
          if (errortext) break;
          }
 
@@ -15259,7 +15267,7 @@ SocialCalc.Formula.EvaluatePolish = function(parseinfo, revpolish, sheet, allowr
       value1 = operand_value_and_type(sheet, operand);
       value = value1.value;
       tostype = value1.type;
-      if (tostype == "b") {
+      if (tostype == "b") {7
          tostype = "n";
          value = 0;
          }
@@ -16254,8 +16262,14 @@ SocialCalc.Formula.SeriesFunctions = function(fname, operand, foperand, sheet) {
    var mk, sk, mk1, sk1; // For variance, etc.: M sub k, k-1, and S sub k-1
                          // as per Knuth "The Art of Computer Programming" Vol. 2 3rd edition, page 232
 
+
+   //console.log("oper:"+operand);
+   //console.log("foper:"+sys.inspect(foperand));
+
    while (foperand.length > 0) {
       value1 = operand_value_and_type(sheet, foperand);
+      //console.log("val"+sys.inspect(value1));
+      //console.log("foper:"+sys.inspect(foperand));   // molto bene puoi ottenere un array pushando i vari value1.value in un []
       t = value1.type.charAt(0);
       if (t == "n") count += 1;
       if (t != "b") counta += 1;
@@ -16440,6 +16454,64 @@ SocialCalc.Formula.SumProductFunction = function(fname, operand, foperand, sheet
    }
 
 SocialCalc.Formula.FunctionList["SUMPRODUCT"] = [SocialCalc.Formula.SumProductFunction, -1, "rangen", "", "stat"];
+
+
+/*
+#
+# CORREL(range1, range2)
+#
+*/
+
+SocialCalc.Formula.CorrelFunction = function(fname, operand, foperand, sheet) {
+
+   console.log("fname:"+fname);
+   console.log("operand:"+sys.inspect(operand));
+   console.log("foperand:"+sys.inspect(foperand));
+
+  
+   var range, products = [], sum = 0;
+   var scf = SocialCalc.Formula;
+   var ncols = 0, nrows = 0;
+
+   var PushOperand = function(t, v) {operand.push({type: t, value: v});};
+
+   while (foperand.length > 0) {
+      range = scf.TopOfStackValueAndType(sheet, foperand);
+      if (range.type != "range") {
+         PushOperand("e#VALUE!", 0);
+         return;
+         }
+      rangeinfo = scf.DecodeRangeParts(sheet, range.value);
+      if (!ncols) ncols = rangeinfo.ncols;
+      else if (ncols != rangeinfo.ncols) {
+         PushOperand("e#VALUE!", 0);
+         return;
+         }
+      if (!nrows) nrows = rangeinfo.nrows;
+      else if (nrows != rangeinfo.nrows) {
+         PushOperand("e#VALUE!", 0);
+         return;
+         }
+      for (i=0; i<rangeinfo.ncols; i++) {
+         for (j=0; j<rangeinfo.nrows; j++) {
+            k = i * rangeinfo.nrows + j;
+            cellcr = SocialCalc.crToCoord(rangeinfo.col1num + i, rangeinfo.row1num + j);
+            cell = rangeinfo.sheetdata.GetAssuredCell(cellcr);
+            value = cell.valuetype == "n" ? cell.datavalue : 0;
+            products[k] = (products[k] || 1) * value;
+            }
+         }
+      }
+   for (i=0; i<products.length; i++) {
+      sum += products[i];
+      }
+   PushOperand("n", sum);
+
+   return;
+
+   }
+
+SocialCalc.Formula.FunctionList["CORREL"] = [SocialCalc.Formula.CorrelFunction, 2, "rangen", "", "stat"];
 
 /*
 #
@@ -17667,11 +17739,11 @@ SocialCalc.Formula.StringFunctions = function(fname, operand, foperand, sheet) {
       case "JGET":
 if (typeof this.navigator != 'undefined') {
      var request = new XMLHttpRequest();
-	console.log("ECCHILO");
+	//console.log("ECCHILO");
 	//request.open('GET', operand_value[1], false); 
 	request.open('GET', "http://192.168.0.98:7379/HGET/"+operand_value[1]+".txt", false); 
 	request.send(null);
- 	//if (request.status === 200) {        console.log(request.responseText);        }
+ 	//if (request.status === 200) {        //console.log(request.responseText);        }
          result = request.responseText;}
 else
 {
@@ -17683,8 +17755,8 @@ var req = http_sync.request({
 });
 
 var res = req.end();
-console.log(res);
-console.log(res.body.toString());
+////console.log(res);
+////console.log(res.body.toString());
 
 result=res.body.toString();
 
@@ -17697,7 +17769,7 @@ if (typeof this.navigator != 'undefined') {
      var request = new XMLHttpRequest();
 	request.open('GET', "http://192.168.0.98:7379/HGET/quotes/"+operand_value[1]+".txt", false); 
 	request.send(null);
- 	//if (request.status === 200) {        console.log(request.responseText);        }
+ 	//if (request.status === 200) {        //console.log(request.responseText);        }
          result = request.responseText;
 }
 else { 
@@ -17709,8 +17781,8 @@ var req = http_sync.request({
 });
 
 var res = req.end();
-console.log(res);
-console.log(res.body.toString());
+////console.log(res);
+////console.log(res.body.toString());
 
 result=res.body.toString();
 }

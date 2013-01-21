@@ -5882,6 +5882,78 @@ SocialCalc.ConvertSaveToOtherFormat = function(savestr, outputformat, dorecalc) 
 
    }
 
+//
+// result = SocialCalc.ConvertSaveToColumn(savestr, outputformat, dorecalc)
+// Dirty hack to exprt a single column as a single line CSV for use in MT, supports "csv" only of the the format below, and only does column 2 for now
+// Returns a string in the specificed format: "scsave", "html", "csv", "tab" (tab delimited)
+// If dorecalc is true, performs a recalc after loading (NO: obsolete!).
+//
+
+SocialCalc.ConvertSaveToColumn = function(savestr, outputformat, dorecalc, columnnumber) {
+
+   var sheet, context, clipextents, div, ele, row, col, cr, cell, str;
+
+   var result = "";
+
+   if (columnnumber == undefined) columnnumber = 2;
+
+   if (outputformat == "scsave") {
+      return savestr;
+      }
+
+   if (savestr == "") {
+      return "";
+      }
+
+   sheet = new SocialCalc.Sheet();
+   sheet.ParseSheetSave(savestr);
+
+   if (dorecalc) {
+      // no longer supported as of 9/10/08
+      // Recalc is now async, so can't do it this way
+      throw("SocialCalc.ConvertSaveToOtherFormat: Not doing recalc.");
+      }
+
+   if (sheet.copiedfrom) {
+      clipextents = SocialCalc.ParseRange(sheet.copiedfrom);
+      }
+   else {
+      clipextents = {cr1: {row: 1, col: 1}, cr2: {row: sheet.attribs.lastrow, col: sheet.attribs.lastcol}};
+      }
+
+   for (row = clipextents.cr1.row; row <= clipextents.cr2.row; row++) {
+      for (col = columnnumber; col <= columnnumber; col++) { //ridiculous i know
+         cr = SocialCalc.crToCoord(col, row);
+         cell = sheet.GetAssuredCell(cr);
+	 console.log((cell));
+
+         if (cell.errors) {
+            str = cell.errors;
+            }
+         else {
+            str = cell.datavalue+""; // get value as text
+            }
+
+         if (outputformat == "csv") {
+            if (str.indexOf('"')!=-1) {
+               str = str.replace(/"/g, '""'); // double quotes
+               }
+            if (/[, \n"]/.test(str)) {
+               str = '"' + str + '"'; // add quotes
+               }
+            //if (col>clipextents.cr1.col) { str = "," + str;  } // youd add commas if you werent exporting by col
+            }
+
+         result += str;
+         }
+      //result += "\n";
+      result += ",";	
+      }
+
+   return result;
+
+   }
+
 
 //
 // result = SocialCalc.ConvertOtherFormatToSave(inputstr, inputformat)
