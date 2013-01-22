@@ -30,7 +30,8 @@ all ::
 depends :: static/ethercalc.js static/start.css
 
 SocialCalcModule.js :: $(SOCIALCALC_FILES) exports.js
-	cat $(SOCIALCALC_FILES) exports.js > $@
+	cat $(SOCIALCALC_FILES) exports.js alertfix.js > $@
+        echo "alert=console.log" > $@
 	#@perl -e 'system(join(" ", "java -jar ~/compiler.jar " => map { ("--js", $$_) } @ARGV). " > $@")' $(SOCIALCALC_FILES) exports.js
 
 static/ethercalc.js :: $(ETHERCALC_FILES)
