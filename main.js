@@ -7,6 +7,8 @@
     this.include('player-broadcast');
     this.include('player-graph');
     this.include('player');
+    CSV = require('ya-csv');
+    colnames = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK"]
     DB = this.include('db');
     SC = this.include('sc');
     KEY = this.KEY;
@@ -189,6 +191,10 @@
           this.response.type(Text);
           return this.response.send(400, 'Please send command');
         }
+	else
+	{
+	console.log("recv cmd:"+command);
+	}
         if (!Array.isArray(command)) {
           command = [command];
         }
@@ -208,6 +214,107 @@
         });
       }
     });
+    this.post({
+      '/test/:room': function(){
+        var room, csv, recnum, curcel, this$ = this;
+        room = this.params.room;
+        //csv = this.body.csv;
+        console.log(this.req.files);
+        try {fnum=Object.keys(this.req.files).length;console.log("Number of posted files:"+fnum);} catch (e) {console.log("no posted files");fnum=0;}
+        if (fnum>0) {
+                var csvstr="loadclipboard version\\c1.5\\n";
+		recnum=0;
+		var reader = CSV.createCsvFileReader(this.req.files.filedata.path, {
+		    'separator': ',',
+		    'quote': '"',
+		    'escape': '"',       
+		    'comment': '',
+		});
+reader.addListener('data', function(data) {
+   //console.log(data);
+   recnum++;
+for (x in data) { curcel = colnames[x]+recnum ; csvstr+="cell\\c"+curcel+"\\ct\\c"+data[x]+"\\n";  }
+});
+reader.addListener('end', function() {
+    csvstr+="\npaste A1:"+curcel+" values\nredisplay\nrecalc";
+    console.log(csvstr);
+    //SC[room].ExecuteCommand(csvstr);	  
+    console.log("end");
+
+        return SC._get(room, IO, function(){
+          var ref$;
+          if ((ref$ = SC[room]) != null) {
+            console.log("executing");
+            ref$.ExecuteCommand(csvstr);
+          }
+                      console.log("emitting");
+          IO.sockets['in']("log-" + room).emit('data', {
+            type: 'execute',
+            cmdstr: csvstr,
+            room: room
+          });
+          return this$.response.json(202, {
+            "INVIATO": "SENT"
+          });
+        });
+
+	
+});
+
+	}
+return ("ok");
+
+      }
+    });
+
+
+    this.post({
+      '/prova/:room': function(){
+        var room, csv, recnum, curcel, this$ = this;
+        room = this.params.room;
+        //csv = this.body.csv;
+        console.log(this.req.files);
+        try {fnum=Object.keys(this.req.files).length;console.log("Number of posted files:"+fnum);} catch (e) {console.log("no posted files");fnum=0;}
+        if (fnum>0) {
+                var csvstr="loadclipboard version\\c1.5\\n";
+		recnum=0;
+		var reader = CSV.createCsvFileReader(this.req.files.filedata.path, {
+		    'separator': ',',
+		    'quote': '"',
+		    'escape': '"',       
+		    'comment': '',
+		});
+reader.addListener('data', function(data) {
+   //console.log(data);
+   recnum++;
+for (x in data) { 
+			curcel = colnames[x]+recnum ; csvstr+="cell\\c"+curcel+"\\ct\\c"+data[x]+"\\n";  
+			 SC._get(room, IO, function(){
+		          var ref$;
+		          if ((ref$ = SC[room]) != null) {
+		            console.log("executing");
+		            ref$.ExecuteCommand("set "+curcel+" value t "+data[x]+"\n");
+                            console.log("TRYING set "+curcel+" value t "+data[x]+"\n");
+		          }
+	                      console.log("emitting");
+		          IO.sockets['in']("log-" + room).emit('data', {
+		            type: 'execute',
+		            cmdstr: "set "+curcel+" value t "+data[x]+"\n",
+		            room: room
+		          });
+			});
+	}
+});
+
+	}
+return ("ok");
+
+      }
+    });
+
+
+
+
     this.post({
       '/_': function(){
         var ref$, room, snapshot, this$ = this;
