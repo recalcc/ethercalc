@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="utf-8" />
 <meta content="IE=edge,chrome=IE9" http-equiv="X-UA-Compatible"/>
-<title>Project Name - Share the URL with your friends and edit together!</title>
+<title>LIVECALC alpha demo - Share the URL with your friends and edit together!</title>
+    <script type="text/javascript" src="/static/support/ext-all.js"></script>
+    <script type="text/javascript" src="/static/support/include-theme.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/static/support/example.css" />
+    <script type="text/javascript" src="/static/support/examples.js"></script>
+    <script type="text/javascript" src="/static/support/states.js"></script>
+
+	    <script type="text/javascript" src="/static/support/layout.js"></script>
+    <script type="text/javascript" src="/static/support/menus.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/support/menus.css" />
+    <link rel="stylesheet" type="text/css" href="/static/support/ext-all-gray.css">
 <script>
 if (!(window.location.hash.replace('#', ''))) {
     if (window.location.href.match(/\/([^_][^\/]*)$/)) {
@@ -13,6 +25,12 @@ if (!(window.location.hash.replace('#', ''))) {
         window.location = '/_start';
     }
 }
+ var reload = function() {
+  if (global_recalc_on || true) {spreadsheet.ExecuteCommand('recalc', '');}	
+}
+setInterval(reload, 5000);
+
+
 </script>
 <script src="/static/ethercalc.js"></script>
 <script src="/socket.io/socket.io.js"></script>
@@ -20,7 +38,6 @@ if (!(window.location.hash.replace('#', ''))) {
 <script src="/player/broadcast.js"></script>
 <script src="/player/graph.js"></script>
 <script src="/player/main.js"></script>
-
 <link rel="stylesheet" type="text/css" href="/static/socialcalc.css">
 <link rel="stylesheet" type="text/css" href="/static/index.css">
 <style>
@@ -32,15 +49,33 @@ body
 .hide {display:none;}
 </style>
 </head>
-<body onresize="if (typeof doresize != 'undefined') doresize();">
-<div id="msg" style="position:absolute;right:15px;top: 8px; bottom: 80px; display: none">
-<textarea id="msgtext" style="margin-top:10px;width:110px;height:100%;"></textarea><br>
-<form id="msgform">
-<input type="text" id="msgout" name="msgout" style="width: 110px">
-<br>
-<input type="submit" style="font-size:x-small;" value="Add a line" onclick="val = document.getElementById('msgout').value; if (/\S/.test(val)) {SocialCalc.Callbacks.broadcast('chat', {msg: val}); addmsg(val, false); document.getElementById('msgout').value = ''}; return false"><br>
-</form>
+ <style type="text/css">
+        .x-panel-body p {
+            margin: 10px;
+            font-size: 12px;
+        }
+    </style>
+
+
+
+<body  onresize="if (typeof doresize != 'undefined') doresize();">
+
+<div style="position:absolute;z-index:100;zIndex:100;left:700px;top:100px;display:none">
+<input type="button" name="go" value="go" onclick="spreadsheet.ExecuteCommand('recalc', '');for (e in spreadsheet){console.log(e+' ');}" />
+<input type="button" id="show-btn" value="open Window"/><br/><br/>
+
 </div>
-<div id="tableeditor">&nbsp;</div>
+ <div id="toolbar"></div>
+       
+        
+        
+        
+        <div id="tableeditor" style="margin:0px;padding:0px;">&nbsp;</div>
+        
+        
+
+    <br /><br /><br /><br /><br />
 </body>
 </html>
+
+
