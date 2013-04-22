@@ -3319,7 +3319,7 @@ if (typeof this.navigator != 'undefined') {
      var request = new XMLHttpRequest();
 	//console.log("ECCHILO");
 	//request.open('GET', operand_value[1], false); 
-	request.open('GET', "http://192.168.0.98:7379/HGET/"+operand_value[1]+".txt", false); 
+	request.open('GET', "http://23.20.49.70:8042/HGET/"+operand_value[1]+".txt", false); 
 	request.send(null);
  	//if (request.status === 200) {        //console.log(request.responseText);        }
          result = request.responseText;}
@@ -3327,8 +3327,8 @@ else
 {
 
 var req = http_sync.request({
-  host: '192.168.0.98',
-  port: 7379,
+  host: '23.20.49.70',
+  port: 8042,
   path: '/HGET/'+operand_value[1]+".txt",
 });
 
@@ -3345,7 +3345,7 @@ result=res.body.toString();
       case "QUOTE":
 if (typeof this.navigator != 'undefined') {
      var request = new XMLHttpRequest();
-	request.open('GET', "http://192.168.0.98:7379/HGET/quotes/"+operand_value[1]+".txt", false); 
+	request.open('GET', "http://23.20.49.70:8042/HGET/quotes/"+operand_value[1]+".txt", false); 
 	request.send(null);
  	//if (request.status === 200) {        //console.log(request.responseText);        }
          result = request.responseText;
@@ -3353,8 +3353,8 @@ if (typeof this.navigator != 'undefined') {
 else { 
 
 var req = http_sync.request({
-  host: '192.168.0.98',
-  port: 7379,
+  host: '23.20.49.70',
+  port: 8042,
   path: '/HGET/quotes/'+operand_value[1]+".txt",
 });
 

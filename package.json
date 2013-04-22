@@ -8,6 +8,7 @@
     "url": "https://github.com/audreyt/ethercalc"
   },
   "dependencies": {
+    "ya-csv": "*",
     "redis": "*",
     "uuid-pure": "*",
     "optimist": "*",
