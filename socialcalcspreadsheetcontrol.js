@@ -245,7 +245,7 @@ SocialCalc.SpreadsheetControl = function(idPrefix) {
 
    this.tabnums.edit = this.tabs.length;
    this.tabs.push({name: "edit", text: "Edit", html:
-      ' <div id="%id.edittools" style="padding:10px 0px 0px 0px;">'+
+      ' <div id="%id.edittools" style="padding:0px 0px 0px 0px;">'+
 '&nbsp;<img id="%id.button_undo" src="%img.undo.gif" style="vertical-align:bottom;">'+
 ' <img id="%id.button_redo" src="%img.redo.gif" style="vertical-align:bottom;">'+
 ' &nbsp;<img src="%img.divider1.gif" style="vertical-align:bottom;">&nbsp; '+
@@ -927,7 +927,7 @@ SocialCalc.InitializeSpreadsheetControl = function(spreadsheet, node, height, wi
 
    spreadsheet.spreadsheetDiv = document.createElement("div");
 
-   spreadsheet.SizeSSDiv(); // calculate and fill in the size values
+   spreadsheet.SizeSSDiv(); // calculate and fill in the size values 
 
    for (child=node.firstChild; child!=null; child=node.firstChild) {
       node.removeChild(child);
@@ -935,14 +935,16 @@ SocialCalc.InitializeSpreadsheetControl = function(spreadsheet, node, height, wi
 
    // create the tabbed UI at the top
 
-   html = '<div><div style="'+spreadsheet.toolbarbackground+'padding:12px 10px 10px 4px;height:40px;">';
+   html = '<div><div style="'+spreadsheet.toolbarbackground+'padding:12px 10px 10px 4px;height:50px;">';
 
    for (i=0; i<tabs.length; i++) {
       html += tabs[i].html;
       }
 
+	  
+	  // modified to hide regular controls TODO: check again
    html += '</div>'+
-      '<div style="'+spreadsheet.tabbackground+'padding-bottom:4px;margin:0px 0px 8px 0px;">'+
+      '<div style="'+spreadsheet.tabbackground+'padding-bottom:4px;margin:0px 0px 8px 0px;display:none">'+
       '<table cellpadding="0" cellspacing="0"><tr>';
 
    for (i=0; i<tabs.length; i++) {

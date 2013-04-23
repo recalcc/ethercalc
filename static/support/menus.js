@@ -70,7 +70,14 @@ Ext.onReady(function(){
     }
 
     function onRadioToggle(item, pressed){
-	 Ext.example.msg('Button Toggled', 'Button "{0}" was toggled to {1}.', item.text, pressed);
+	 var s_c_o = SocialCalc.GetSpreadsheetControlObject();
+	 //Ext.example.msg('Button Toggled', 'Button "{0}" was toggled to {1}.', item.text, pressed);
+	 // this could be done more elegantly for sure
+	 if (pressed) {
+	 if (item.text=="Edit") SocialCalc.SetTab(document.getElementById("SocialCalc-edittab"));
+	 if (item.text=="Names") SocialCalc.SetTab(document.getElementById("SocialCalc-namestab"));
+	 if (item.text=="Format") SocialCalc.SetTab(document.getElementById("SocialCalc-settingstab"));
+	 }
 	console.log(item);
     }
     
@@ -130,41 +137,11 @@ Ext.onReady(function(){
             overflow: 'visible'     // For the Combo popup
         },
         items: [
-            combo,                  // A Field in a Menu
             {
-                text: 'I like Ext',
+                text: 'Make public',
                 checked: true,       // when checked has a boolean value, it is assumed to be a CheckItem
                 checkHandler: onItemCheck
-            }, '-', {
-                text: 'Radio Options',
-                menu: {        // <-- submenu by nested config object
-                    items: [
-                        // stick any markup in a menu
-                        '<b class="menu-title">Choose a Theme</b>',
-                        {
-                            text: 'Aero Glass',
-                            checked: true,
-                            group: 'theme',
-                            checkHandler: onItemCheck
-                        }, {
-                            text: 'Vista Black',
-                            checked: false,
-                            group: 'theme',
-                            checkHandler: onItemCheck
-                        }, {
-                            text: 'Gray Theme',
-                            checked: false,
-                            group: 'theme',
-                            checkHandler: onItemCheck
-                        }, {
-                            text: 'Default Theme',
-                            checked: false,
-                            group: 'theme',
-                            checkHandler: onItemCheck
-                        }
-                    ]
-                }
-           },{
+            }, '-',{
                text: 'Choose a Date',
                iconCls: 'calendar',
                menu: dateMenu // <-- submenu by reference
@@ -188,17 +165,19 @@ Ext.onReady(function(){
 tb.add("-",{
         text: 'Edit',  toggleGroup: 'ratings',
 
-		
+		        tooltip: 'Show cells.',
         enableToggle: true,
         toggleHandler: onRadioToggle,
         pressed: true
     },{
         text: 'Format', toggleGroup: 'ratings',
+		        tooltip: 'Click here to format selected cells.',
         enableToggle: true,
         toggleHandler: onRadioToggle,
         pressed: false
     },{
         text: 'Names', toggleGroup: 'ratings',
+		        tooltip: 'Click to set range names.',
         enableToggle: true,
         toggleHandler: onRadioToggle,
         pressed: false
@@ -221,7 +200,7 @@ tb.add(
                         iconAlign: 'left'
                     },
                     items: [{
-                        text: 'User<br/>manager',
+                        text: 'User manager',
                         iconCls: 'edit',
                         width: 90
                     },{
@@ -300,22 +279,12 @@ tb.add(
     // access items by id or index
     menu.items.get('disableMe').disable();
 
-    // They can also be referenced by id in or components
-    tb.add('-', {
-        icon: 'list-items.gif', // icons can also be specified inline
-		text: 'not really',
-        cls: 'x-btn-icon',
-        tooltip: '<b>Quick Tips</b><br/>Icon only button with tooltip<br><b>Activated on mousedown</b>',
-        clickEvent: 'mousedown',
-        handler: function(){
-            Ext.example.msg('Button Click','You clicked the "icon only" button.');
-        }
-    }, '-');
+
 
 	
 	
     var scrollMenu = Ext.create('Ext.menu.Menu');
-    for (var i = 0; i < 50; ++i){
+    for (var i = 0; i < 20; ++i){
         scrollMenu.add({
             text: 'Sheet' + (i + 1),
             handler: onItemClick
@@ -331,6 +300,7 @@ tb.add(
 	
 		    tb.add("-",{
         text: 'Show Window',
+		        tooltip: 'Show charts/graphs window',
         enableToggle: true,
 		id:"winSHOW",
 		        toggleHandler: onSToggle,

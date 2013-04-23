@@ -16326,15 +16326,6 @@ SocialCalc.Formula.SeriesFunctions = function(fname, operand, foperand, sheet) {
             }
          break;
 
-      case "OTTANTAQUATTRO":
-         if (count > 0) {
-            PushOperand("n", 84);
-            }
-         else {
-            PushOperand("n", -84);
-            }
-         break;
-
       case "STDEV":
          if (count > 1) {
             PushOperand(resulttypesum, Math.sqrt(sk / (count - 1))); // sk is never negative according to Knuth
@@ -16385,7 +16376,6 @@ SocialCalc.Formula.FunctionList["MAX"] = [SocialCalc.Formula.SeriesFunctions, -1
 SocialCalc.Formula.FunctionList["MIN"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["PRODUCT"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["STDEV"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
-SocialCalc.Formula.FunctionList["OTTANTAQUATTRO"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["STDEVP"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["SUM"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
 SocialCalc.Formula.FunctionList["VAR"] = [SocialCalc.Formula.SeriesFunctions, -1, "vn", null, "stat"];
@@ -16502,8 +16492,6 @@ if (typeof this.navigator == 'undefined') {
       }
 
    if (rangevals[0].length != rangevals[1].length) { PushOperand("e#VALUE!", 0); return; } // ranges must be of same length
-   console.log(rangevals);
-   console.log(rangevals[0][0]);
 
    sum_sq_x=0;sum_sq_y=0;
    sum_coproduct=0;
@@ -21356,7 +21344,7 @@ SocialCalc.SpreadsheetControl = function(idPrefix) {
 
    this.tabnums.edit = this.tabs.length;
    this.tabs.push({name: "edit", text: "Edit", html:
-      ' <div id="%id.edittools" style="padding:10px 0px 0px 0px;">'+
+      ' <div id="%id.edittools" style="padding:0px 0px 0px 0px;">'+
 '&nbsp;<img id="%id.button_undo" src="%img.undo.gif" style="vertical-align:bottom;">'+
 ' <img id="%id.button_redo" src="%img.redo.gif" style="vertical-align:bottom;">'+
 ' &nbsp;<img src="%img.divider1.gif" style="vertical-align:bottom;">&nbsp; '+
@@ -22052,8 +22040,10 @@ SocialCalc.InitializeSpreadsheetControl = function(spreadsheet, node, height, wi
       html += tabs[i].html;
       }
 
+	  
+	  // modified to hide regular controls TODO: check again
    html += '</div>'+
-      '<div style="'+spreadsheet.tabbackground+'padding-bottom:4px;margin:0px 0px 8px 0px;">'+
+      '<div style="'+spreadsheet.tabbackground+'padding-bottom:4px;margin:0px 0px 8px 0px;display:none">'+
       '<table cellpadding="0" cellspacing="0"><tr>';
 
    for (i=0; i<tabs.length; i++) {
@@ -25488,3 +25478,4 @@ SocialCalc.DoPositionCalculations = function (editor) {
         null, "doneposcalc", null, editor
     );
 }
+alert=console.log;

@@ -25,8 +25,9 @@ if (!(window.location.hash.replace('#', ''))) {
         window.location = '/_start';
     }
 }
+global_recalc_on=false;
  var reload = function() {
-  if (global_recalc_on || true) {spreadsheet.ExecuteCommand('recalc', '');}	
+  if (global_recalc_on) {spreadsheet.ExecuteCommand('recalc', '');}	
 }
 setInterval(reload, 5000);
 
