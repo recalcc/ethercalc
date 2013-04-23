@@ -3,6 +3,8 @@
   this.include = function(){
     var DB, SC, KEY, BASEPATH, HMAC_CACHE, hmac, ref$, Text, Html, Csv, Json, RealBin, sendFile, IO, api;
     this.use('bodyParser', this.app.router, this.express['static'](__dirname));
+	//this.app.use(this.express.static(__dirname + "/static"));
+	console.log("__dirname:" + __dirname);
     this.include('dotcloud');
     this.include('player-broadcast');
     this.include('player-graph');

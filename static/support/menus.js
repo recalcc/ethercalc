@@ -12,6 +12,20 @@ Ext.require([
 
 Ext.onReady(function(){
 
+Ext.create('Ext.window.Window', {
+    title: 'Hello',
+	closable:true,
+    height: 200,
+    width: 400,
+    layout: 'fit',
+    items: {  // Let's put an empty grid in just to illustrate fit layout
+        xtype: 'grid',
+        border: false,
+        columns: [{header: 'World'}],                 // One header just for show. There's no data,
+        store: Ext.create('Ext.data.ArrayStore', {}) // A dummy empty data store
+    }
+}).show();
+
     function onSToggle(item, pressed){
         if (!win) {
             win = Ext.create('widget.window', {
@@ -177,50 +191,15 @@ tb.add("-",{
         pressed: false
     },{
         text: 'Names', toggleGroup: 'ratings',
-		        tooltip: 'Click to set range names.',
+		             tooltip: {text:'Click to define a new name and see a list of defined names', title:'Use names instead of cell references'},
         enableToggle: true,
         toggleHandler: onRadioToggle,
         pressed: false
     },"-");
 
-tb.add(
- {
-            text: 'Share',
-            iconCls: 'user',
-            menu: {
-                xtype: 'menu',
-                plain: true,
-                items: {
-                    xtype: 'buttongroup',
-                    title: 'User options',
-                    columns: 2,
-                    defaults: {
-                        xtype: 'button',
-                        scale: 'large',
-                        iconAlign: 'left'
-                    },
-                    items: [{
-                        text: 'User manager',
-                        iconCls: 'edit',
-                        width: 90
-                    },{
-                        iconCls: 'add',
-                        tooltip: 'Add user',
-                        width: 40
-                    },{
-                        colspan: 2,
-                        text: 'Import',
-                        scale: 'small',
-                        width: 130
-                    },{
-                        colspan: 2,
-                        text: 'Who is online?',
-                        scale: 'small',
-                        width: 130
-                    }]
-                }
-            }
-        },
+/*
+	tb.add(
+
         Ext.create('Ext.button.Split', {
             text: 'View',
             handler: onButtonClick,
@@ -259,7 +238,7 @@ tb.add(
                 }]
             }
         }));
-
+*/
     menu.add(' ');
 
     // Menus have a rich api for
