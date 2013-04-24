@@ -724,6 +724,13 @@ SocialCalc.Constants = {
    s_fdef_SUMPRODUCT: 'Sums the pairwise products of 2 or more ranges. The ranges must be of equal length.',
    s_fdef_CEILING: 'Rounds the given number up to the nearest integer or multiple of significance. Significance is the value to whose multiple of ten the value is to be rounded up (.01, .1, 1, 10, etc.)',
    s_fdef_FLOOR: 'Rounds the given number down to the nearest multiple of significance. Significance is the value to whose multiple of ten the number is to be rounded down (.01, .1, 1, 10, etc.)',
+   
+   s_fdef_EMAIL: 'Send Email. ',
+   s_farg_email: "body,recipient",
+   s_fdef_TWEET: 'Send a tweet. ',
+   s_farg_tweet: "body,recipient",
+
+   
 
    s_farg_v: "value",
    s_farg_vn: "value1, value2, ...",

@@ -3117,9 +3117,11 @@ SocialCalc.Formula.ArgList = {
                 RIGHT: [1, 0],
                 SUBSTITUTE: [1, 1, 1, 0],
                 TRIM: [1],
-		CIAO: [1],
-		JGET: [1],
-		QUOTE: [1],
+				HELLO: [1],
+				JGET: [1],
+				QUOTE: [1],
+				EMAIL: [1,1],
+				TWEET: [1,1],
                 UPPER: [1]
                };
 
@@ -3309,64 +3311,84 @@ SocialCalc.Formula.StringFunctions = function(fname, operand, foperand, sheet) {
          resulttype = "t";
          break;
 
-      case "CIAO":
-         result = "ciaociao";
+      case "HELLO":
+         result = "HELLO WORLD";
          resulttype = "t";
          break;
 
+      case "TWEET":
+		  if (typeof this.navigator != 'undefined') {
+			  var request = new XMLHttpRequest();
+			  request.open('GET', "http://23.20.49.70:8001/TWEET/" + operand_value[1] + "/"+operand_value[2]+"", false);
+			  request.send(null);
+			  result = request.responseText;
+		  } else {
+		  try {
+			  var req = http_sync.request({
+				  host: '23.20.49.70',
+				  port: 8001,
+				  path: '/TWEET/' + operand_value[1] + "/"+operand_value[2]
+			  });
+			  var res = req.end();
+			  result = res.body.toString(); }
+			  catch (httperr) { console.log("HTTP ERR:");console.log(httperr); result="HTTP ERROR";}
+		  }
+		  resulttype = "t";
+		  break;				 
+		 
+      case "EMAIL":
+		  if (typeof this.navigator != 'undefined') {
+			  var request = new XMLHttpRequest();
+			  request.open('GET', "http://23.20.49.70:8001/EMAIL/" + operand_value[1] + "/"+operand_value[2]+"", false);
+			  request.send(null);
+			  result = request.responseText;
+		  } else {
+			  var req = http_sync.request({
+				  host: '23.20.49.70',
+				  port: 8001,
+				  path: '/EMAIL/' + operand_value[1] + "/"+operand_value[2]
+			  });
+			  var res = req.end();
+			  result = res.body.toString();
+		  }
+		  resulttype = "t";
+		  break;		 
+		 
       case "JGET":
-if (typeof this.navigator != 'undefined') {
-     var request = new XMLHttpRequest();
-	//console.log("ECCHILO");
-	//request.open('GET', operand_value[1], false); 
-	request.open('GET', "http://23.20.49.70:8042/HGET/"+operand_value[1]+".txt", false); 
-	request.send(null);
- 	//if (request.status === 200) {        //console.log(request.responseText);        }
-         result = request.responseText;}
-else
-{
-
-var req = http_sync.request({
-  host: '23.20.49.70',
-  port: 8042,
-  path: '/HGET/'+operand_value[1]+".txt",
-});
-
-var res = req.end();
-//console.log(res);
-//console.log(res.body.toString());
-
-result=res.body.toString();
-
-}
-         resulttype = "t";
-         break;
+		  if (typeof this.navigator != 'undefined') {
+			  var request = new XMLHttpRequest();
+			  request.open('GET', "http://23.20.49.70:8042/HGET/" + operand_value[1] + ".txt", false);
+			  request.send(null);
+			  result = request.responseText;
+		  } else {
+			  var req = http_sync.request({
+				  host: '23.20.49.70',
+				  port: 8042,
+				  path: '/HGET/' + operand_value[1] + ".txt",
+			  });
+			  var res = req.end();
+			  result = res.body.toString();
+		  }
+		  resulttype = "t";
+		  break;
 
       case "QUOTE":
-if (typeof this.navigator != 'undefined') {
-     var request = new XMLHttpRequest();
-	request.open('GET', "http://23.20.49.70:8042/HGET/quotes/"+operand_value[1]+".txt", false); 
-	request.send(null);
- 	//if (request.status === 200) {        //console.log(request.responseText);        }
-         result = request.responseText;
-}
-else { 
-
-var req = http_sync.request({
-  host: '23.20.49.70',
-  port: 8042,
-  path: '/HGET/quotes/'+operand_value[1]+".txt",
-});
-
-var res = req.end();
-//console.log(res);
-//console.log(res.body.toString());
-
-result=res.body.toString();
-}
-         resulttype = "t";
-         break;
-
+		 if (typeof this.navigator != 'undefined') {
+			 var request = new XMLHttpRequest();
+			 request.open('GET', "http://23.20.49.70:8042/HGET/quotes/" + operand_value[1] + ".txt", false);
+			 request.send(null);
+			 result = request.responseText;
+		 } else {
+			 var req = http_sync.request({
+				 host: '23.20.49.70',
+				 port: 8042,
+				 path: '/HGET/quotes/' + operand_value[1] + ".txt",
+			 });
+			 var res = req.end();
+			 result = res.body.toString();
+		 }
+		 resulttype = "t";
+		 break;
 
       }
 
@@ -3387,7 +3409,9 @@ SocialCalc.Formula.FunctionList["RIGHT"] = [SocialCalc.Formula.StringFunctions, 
 SocialCalc.Formula.FunctionList["SUBSTITUTE"] = [SocialCalc.Formula.StringFunctions, -3, "subs", "", "text"];
 SocialCalc.Formula.FunctionList["TRIM"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
 SocialCalc.Formula.FunctionList["UPPER"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
-SocialCalc.Formula.FunctionList["CIAO"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
+SocialCalc.Formula.FunctionList["HELLO"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
+SocialCalc.Formula.FunctionList["EMAIL"] = [SocialCalc.Formula.StringFunctions, 2, "v", "", "text"];
+SocialCalc.Formula.FunctionList["TWEET"] = [SocialCalc.Formula.StringFunctions, 2, "v", "", "text"];
 SocialCalc.Formula.FunctionList["JGET"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
 SocialCalc.Formula.FunctionList["QUOTE"] = [SocialCalc.Formula.StringFunctions, 1, "v", "", "text"];
 
