@@ -12,6 +12,8 @@ Ext.require([
 
 Ext.onReady(function(){
 
+// GRID
+/*
 gridwin=Ext.create('Ext.window.Window', {
     title: 'Hello',
 	closable:true,
@@ -25,7 +27,7 @@ gridwin=Ext.create('Ext.window.Window', {
         store: Ext.create('Ext.data.ArrayStore', {}) // A dummy empty data store
     }
 });
-
+*/
 
     function onSToggle(item, pressed){
         if (!win) {
@@ -268,14 +270,15 @@ tb.add("-",{
         });
     }
     // scrollable menu
+	/*
     tb.add({
         icon: 'preview.png',
         cls: 'x-btn-text-icon',
         text: 'Other Sheets',
-        menu: scrollMenu
+        menu: scrollMenu 
     });
-	
-		    tb.add("-",{
+	*/
+		    tb.add({
         text: 'Show Charts',
 		        tooltip: 'Show charts/graphs window',
         enableToggle: true,
@@ -320,7 +323,7 @@ tb.add("-",{
                 items: [{
                     region: 'west',
                     title: 'Help',
-                    width: 200,
+                    width: 150,
                     split: true,
                     collapsible: true,
                     floatable: true
@@ -386,7 +389,7 @@ tb.add("-",{
                 items: [{
                     region: 'west',
                     title: 'Help',
-                    width: 200,
+                    width: 150,
                     split: true,
                     collapsible: true,
 					html:"<div style='padding:6px'>These symbols are available in our free package:</div>",
@@ -405,13 +408,46 @@ tb.add("-",{
                 }]
             });
 
-
+ sc_win = Ext.create('widget.window', {
+				x:50,
+				y:50,
+                title: 'Scripting',
+                closable: true,
+                closeAction: 'hide',
+                //animateTarget: this,
+                width: 900,
+                height: 500,
+                layout: 'border',
+                bodyStyle: 'padding: 5px;',
+                items: [{
+                    region: 'west',
+                    title: 'Help',
+                    width: 200,
+                    split: true,
+                    collapsible: true,
+					html:"<div style='padding:6px'>Make sure you know what you're doing .. Try typing <i>this.window.top.SocialCalc</i> in the lower box and see what happens.<br>We've abbreviated it to <i>_s</i> for you.<br><br> Also try the <i>execmd()</i> function..<br><br> <a href='http://fe/reference/executeCommand'>Click here for a command syntax reference.</a></div>",
+                    floatable: true
+                }, {
+                    region: 'center',
+                    xtype: 'tabpanel',
+                    items: [ {
+                        title: 'Console 1',
+                        html: '<iframe id="editor1" src="/js-repl/index.html" width=100% height=100%></iframe>'
+                    },
+					{
+                        title: 'Edit',
+                        html: '<textarea style="width:100%;height:100%;padding:3px;" contenteditable>Just a test editor.. </textarea>'
+                    }]
+                }]
+            });
+			
 onRToggle = function() { ld_win.show();};
 
   function onGenToggle(item, pressed) {
   if (item.text == "Live Data Sources") { if (pressed) ld_win.show(); else ld_win.hide(); }
   if (item.text == "R integration") { if (pressed) r_win.show(); else r_win.hide(); }
   if (item.text == "Live Alerts") { if (pressed) alerts_win.show(); else alerts_win.hide(); }
+  if (item.text == "Scripts") { if (pressed) sc_win.show(); else sc_win.hide(); }
     }
 
 	
@@ -446,7 +482,7 @@ onRToggle = function() { ld_win.show();};
         text: 'R integration',
 		        tooltip: 'Show specific R help',
         enableToggle: true,
-		id:"rSHOW",
+		id:"rSHOW", 
 		        toggleHandler: onGenToggle,
         pressed: false
     },"-");
@@ -461,7 +497,14 @@ onRToggle = function() { ld_win.show();};
         pressed: false
     },"-");
 
-
+		    tb.add({
+        text: 'Scripts',
+		        tooltip: 'Access the scripting console',
+        enableToggle: true,
+		id:"scSHOW",
+		        toggleHandler: onGenToggle,
+        pressed: false
+    },"-"); 
 	
     tb.resumeLayouts(true);
 	

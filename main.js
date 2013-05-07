@@ -5,6 +5,7 @@
     this.use('bodyParser', this.app.router, this.express['static'](__dirname),  this.express['static'](__dirname + "/static/resources"),  this.express['static'](__dirname + "/static/"));
 	//this.app.use(this.express.static(__dirname + "/static"));
 	this.app.use("/resources", this.express.static(__dirname + "/static"));
+	this.app.use("/js-repl", this.express.static(__dirname + "/js-repl"));
 	console.log("__dirname:" + __dirname);
     this.include('dotcloud');
     this.include('player-broadcast');
