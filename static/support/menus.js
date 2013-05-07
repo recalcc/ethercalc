@@ -12,7 +12,7 @@ Ext.require([
 
 Ext.onReady(function(){
 
-Ext.create('Ext.window.Window', {
+gridwin=Ext.create('Ext.window.Window', {
     title: 'Hello',
 	closable:true,
     height: 200,
@@ -24,7 +24,8 @@ Ext.create('Ext.window.Window', {
         columns: [{header: 'World'}],                 // One header just for show. There's no data,
         store: Ext.create('Ext.data.ArrayStore', {}) // A dummy empty data store
     }
-}).show();
+});
+
 
     function onSToggle(item, pressed){
         if (!win) {
@@ -50,9 +51,6 @@ Ext.create('Ext.window.Window', {
                     items: [{
                         title: 'RTGFX',
                         html: 'Hello world 1'
-                    }, {
-                        title: 'Symbol List',
-                        html: 'Hello world 2'
                     }, {
                         title: 'Online Help',
                         html: 'Hello world 3',
@@ -278,7 +276,7 @@ tb.add("-",{
     });
 	
 		    tb.add("-",{
-        text: 'Show Window',
+        text: 'Show Charts',
 		        tooltip: 'Show charts/graphs window',
         enableToggle: true,
 		id:"winSHOW",
@@ -308,9 +306,113 @@ tb.add("-",{
         width:135
     });
     tb.add("-",combo);
+	
+ alerts_win = Ext.create('widget.window', {
+                x:100,
+                title: 'Live Alerts',
+                closable: true,
+                closeAction: 'hide',
+                //animateTarget: this,
+                width: 600,
+                height: 350,
+                layout: 'border',
+                bodyStyle: 'padding: 5px;',
+                items: [{
+                    region: 'west',
+                    title: 'Help',
+                    width: 200,
+                    split: true,
+                    collapsible: true,
+                    floatable: true
+                }, {
+                    region: 'center',
+                    xtype: 'tabpanel',
+                    items: [{
+                        title: 'Existing Alerts',
+                        html: 'Insert list here'
+                    }, {
+                        title: 'Sent Alerts',
+                        html: 'TBD'
+                    }]
+                }]
+            });
+	
+
+ r_win = Ext.create('widget.window', {
+				x:150,
+                title: 'R integration',
+                closable: true,
+                closeAction: 'hide',
+                //animateTarget: this,
+                width: 800,
+                height: 350,
+                layout: 'border',
+                bodyStyle: 'padding: 5px;',
+                items: [{
+                    region: 'west',
+                    title: 'Help',
+                    width: 100,
+                    split: true,
+                    collapsible: true,
+					html: '<div style="padding:6px">Use the power of R from Livecalc.</div>',
+                    floatable: true
+                }, {
+                    region: 'center',
+                    xtype: 'tabpanel',
+                    items: [{
+                        title: 'Free advanced R functions',
+                        html: '<div style="padding:6px">Insert list of R functions available here</div>'
+                    }, {
+                        title: 'Premium R',
+                        html: '<div style="padding:6px">Copy to upsell to locally installed package, including trading etc etc goes here</div>'
+                    }, {
+                        title: 'R spread analysis',
+                        html: '<div style="padding:6px">Copy to upsell to locally installed package, including trading etc etc goes here</div>'
+                    }]
+                }]
+            });
+
+	
+ ld_win = Ext.create('widget.window', {
+				x:300,
+                title: 'Live Data Sources',
+                closable: true,
+                closeAction: 'hide',
+                //animateTarget: this,
+                width: 600,
+                height: 350,
+                layout: 'border',
+                bodyStyle: 'padding: 5px;',
+                items: [{
+                    region: 'west',
+                    title: 'Help',
+                    width: 200,
+                    split: true,
+                    collapsible: true,
+					html:"<div style='padding:6px'>These symbols are available in our free package:</div>",
+                    floatable: true
+                }, {
+                    region: 'center',
+                    xtype: 'tabpanel',
+                    items: [ {
+                        title: 'Real Time Symbol List',
+                        html: '<iframe src="http://50.19.35.22:8001/quote_grid.php" width=100% height=100%></iframe>'
+                    },
+					{
+                        title: 'End of day Symbol List',
+                        html: '<iframe src="http://50.19.35.22:8001/quote_grid.php" width=100% height=100%></iframe>'
+                    }]
+                }]
+            });
 
 
+onRToggle = function() { ld_win.show();};
 
+  function onGenToggle(item, pressed) {
+  if (item.text == "Live Data Sources") { if (pressed) ld_win.show(); else ld_win.hide(); }
+  if (item.text == "R integration") { if (pressed) r_win.show(); else r_win.hide(); }
+  if (item.text == "Live Alerts") { if (pressed) alerts_win.show(); else alerts_win.hide(); }
+    }
 
 	
 	    tb.add("-",{
@@ -329,7 +431,38 @@ tb.add("-",{
 			spreadsheet.ExecuteCommand('recalc', '');
         }
     }, '-');
-		
+	
+	    tb.add({
+        text: 'Live Data Sources',
+		tooltip: 'Browse available live data series',
+        enableToggle: true,
+		id:"ldSHOW",
+		toggleHandler: onGenToggle,
+        pressed: false
+    },"-");
+	
+	
+		    tb.add({ 
+        text: 'R integration',
+		        tooltip: 'Show specific R help',
+        enableToggle: true,
+		id:"rSHOW",
+		        toggleHandler: onGenToggle,
+        pressed: false
+    },"-");
+	
+	
+		    tb.add({
+        text: 'Live Alerts',
+		        tooltip: 'Show live alerts window',
+        enableToggle: true,
+		id:"laSHOW",
+		        toggleHandler: onGenToggle,
+        pressed: false
+    },"-");
+
+
+	
     tb.resumeLayouts(true);
 	
 	
