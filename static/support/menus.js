@@ -408,38 +408,107 @@ tb.add("-",{
                 }]
             });
 
- sc_win = Ext.create('widget.window', {
-				x:50,
-				y:50,
-                title: 'Scripting',
+ sce_win = Ext.create('widget.window', {
+				x:300,
+                title: 'Script Editor',
                 closable: true,
                 closeAction: 'hide',
                 //animateTarget: this,
-                width: 900,
-                height: 500,
+                width: 600,
+                height: 350,
                 layout: 'border',
                 bodyStyle: 'padding: 5px;',
+				                  bbar:[ {xtype: 'tbfill'},
+                           {
+                                 xtype:'button',
+                                 text:'Execute',
+                                 name:'vv',
+                                 id:'vv',
+                                 tooltip:'Execute this script immediately',
+                                 handler: function(){
+								                    Ext.example.msg('Executing', 'Executing Scrathpad contents.');
+													eval(top.script1.value);
+                                               }
+                            },
+							                                { xtype:'button',
+                                 text:'Save',
+                                 name:'vvws',
+                                 id:'vvws',
+                                 tooltip:'Click here to save this script',
+                                 handler: function(){
+                                                  Ext.example.msg('Warning', 'Function is not yet implemented');
+												  
+                                               }
+                            }
+							
+                    ],
                 items: [{
                     region: 'west',
                     title: 'Help',
-                    width: 200,
+                    width: 150,
                     split: true,
                     collapsible: true,
-					html:"<div style='padding:6px'>Make sure you know what you're doing .. Try typing <i>this.window.top.SocialCalc</i> in the lower box and see what happens.<br>We've abbreviated it to <i>_s</i> for you.<br><br> Also try the <i>execmd()</i> function..<br><br> <a href='http://fe/reference/executeCommand'>Click here for a command syntax reference.</a></div>",
+					html:"<div style='padding:6px'><a href='http://fe/reference/executeCommand'>Click here for a command syntax reference.</a></div>",
                     floatable: true
                 }, {
                     region: 'center',
                     xtype: 'tabpanel',
                     items: [ {
-                        title: 'Console 1',
-                        html: '<iframe id="editor1" src="/js-repl/index.html" width=100% height=100%></iframe>'
+                        title: 'Scratchpad',
+                        xtype:'textarea' ,
+							id:'script1',
+							listeners: {
+afterrender: function(){
+var me = this;
+me.el.swallowEvent(['keypress','keydown' ]);
+}
+}
+							//html: '<textarea id="script1" style="width:100%;height:100%"></textarea>'
                     },
 					{
-                        title: 'Edit',
-                        html: '<textarea style="width:100%;height:100%;padding:3px;" contenteditable>Just a test editor.. </textarea>'
-                    }]
+                        title: 'onRefresh',
+                        html: '<textarea id="script2" style="width:100%;height:100%">2</textarea>'
+                    },
+					{
+                        title: 'onOpen',
+                        html: '<textarea id="script3" style="width:100%;height:100%">3</textarea>'
+                    }
+					
+					
+					]
                 }]
-            });
+            });			
+			
+ sc_win = Ext.create('widget.window', {
+     x: 50,
+     y: 50,
+     title: 'Scripting Console',
+     maximizable: true,
+     closable: true,
+     closeAction: 'hide',
+     //animateTarget: this,
+     width: 900,
+     height: 500,
+     layout: 'border',
+     bodyStyle: 'padding: 5px;',
+     items: [{
+             region: 'west',
+             title: 'Help',
+             width: 200,
+             split: true,
+             collapsible: true,
+             html: "<div style='padding:6px'>Make sure you know what you're doing .. Try typing <i>this.window.top.SocialCalc</i> in the lower box and see what happens.<br>We've abbreviated it to <i>_s</i> for you.<br><br> Also try the <i>execmd()</i> function..<br><br> <a href='http://fe/reference/executeCommand'>Click here for a command syntax reference.</a></div>",
+             floatable: true
+         }, {
+             region: 'center',
+             xtype: "component",
+             autoEl: {
+                 tag: "iframe",
+                 src: "/js-repl/index.html"
+             }
+         }
+     ]
+ });
 			
 onRToggle = function() { ld_win.show();};
 
@@ -447,7 +516,8 @@ onRToggle = function() { ld_win.show();};
   if (item.text == "Live Data Sources") { if (pressed) ld_win.show(); else ld_win.hide(); }
   if (item.text == "R integration") { if (pressed) r_win.show(); else r_win.hide(); }
   if (item.text == "Live Alerts") { if (pressed) alerts_win.show(); else alerts_win.hide(); }
-  if (item.text == "Scripts") { if (pressed) sc_win.show(); else sc_win.hide(); }
+  if (item.text == "Console") { if (pressed) sc_win.show(); else sc_win.hide(); }
+  if (item.text == "Scripts") { if (pressed) sce_win.show(); else sce_win.hide(); }
     }
 
 	
@@ -485,7 +555,7 @@ onRToggle = function() { ld_win.show();};
 		id:"rSHOW", 
 		        toggleHandler: onGenToggle,
         pressed: false
-    },"-");
+    },"-"); 
 	
 	
 		    tb.add({
@@ -499,6 +569,15 @@ onRToggle = function() { ld_win.show();};
 
 		    tb.add({
         text: 'Scripts',
+		        tooltip: 'Access the script editor',
+        enableToggle: true,
+		id:"sceSHOW",
+		        toggleHandler: onGenToggle,
+        pressed: false
+    },"-"); 
+	
+			    tb.add({
+        text: 'Console',
 		        tooltip: 'Access the scripting console',
         enableToggle: true,
 		id:"scSHOW",
