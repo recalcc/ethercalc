@@ -432,9 +432,20 @@ tb.add("-",{
                 },
                 {
                     xtype: 'textfield',
-                    width: 360,
-                    fieldLabel: 'URL:'
-                }
+                    width: 372,
+                    fieldLabel: 'insert URL:'
+                },
+				{
+            xtype: 'filefield',
+            id: 'form-file',
+			width: 372,
+            emptyText: '..or upload a file',
+            fieldLabel: 'CSV Upload',
+            name: 'csv-path',
+            buttonText: '',
+            buttonConfig: {
+                iconCls: 'upload-icon'
+            }}
             ],
             dockedItems: [
                 {

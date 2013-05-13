@@ -1,0 +1,164 @@
+  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+  <html> 
+   <head> 
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+      <title><%= uno %>-<%= due %></title> 
+      <link href="layout.css" rel="stylesheet" type="text/css"> 
+      <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]--> 
+      <script language="javascript" type="text/javascript" src="/js/jquery.js"></script> 
+      <script language="javascript" type="text/javascript" src="/js/jquery.flot.js"></script> 
+   </head> 
+      <body> 
+   
+      <div id="placeholder" style="width:1120px;height:600px;"></div> 
+   <input type="text" name="inst1" id="inst1" value="<%= uno %>">
+
+   <input type="text" name="inst2" id="inst2" value="<%= due %>">
+ 
+   <input type="text" name="op" id="op" value="-"  class="target" />
+   <input type="button" name="dbgb" id="dbgb" onclick="clean();" />
+   <a href="#" onclick="clean();">clean</a>
+   
+<a href="/spreadem/<%= uno %>/<%= due %>">permalink</a><br>
+
+   <input type="text" name="val1" id="val1" value="<%= uno %>">
+
+<input type="text" name="val2" id="val2" value="<%= due %>">
+
+
+<input type="text" name="divi" id="divi" value="" class="target" /> div
+
+<script>
+
+function gup( name )
+{
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( window.location.href );
+  if( results == null )
+    return "";
+  else
+    return results[1];
+}
+
+      v2=document.getElementById("op").value=gup(op)||"-";
+
+
+function clean()  {
+    
+          data=[];
+    ctr=0;
+    plot.setData([data]);
+    plot.setupGrid();
+    plot.draw();
+    alert();
+    }
+</script>
+
+
+      <p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p> 
+   
+  <script type="text/javascript"> 
+  $(function () {
+      var data = [], totalPoints = 300;
+      var ctr =0;
+      urlbase = "http://192.168.0.127:3001/HMGET/quotes/";
+      v1=document.getElementById("val1");
+      v2=document.getElementById("val2");
+      divitxt=document.getElementById("divi");
+      
+      $('.target').change(function() {
+          
+    
+        data=[];
+        ctr=0;
+        plot.setData([data]);
+        plot.setupGrid();
+        plot.draw();
+
+      });
+      
+      
+          function pulisci() {
+      //data=[];
+      //ctr=0;
+      //plot.setData([data]);
+      //plot.setupGrid();
+      //plot.draw();
+      alert(1);
+      }
+      
+      
+      
+            function onDataReceived(series) {
+        //alert(series);
+        //document.getElementById("dbg").value=data;
+        //data.push(eval("("+series+")")+0);
+         //plot.setData([document.getElementById("dbg").value.split(",") ]);
+         // since the axes don't change, we don't need to call plot.setupGrid()
+         ctr++;
+         if (document.getElementById("op").value=="-")
+            valore=eval("("+series[0]+")")-eval("("+series[1]+")");
+        else
+            valore=eval("("+series[0]+")")/eval("("+series[1]+")");
+         
+         
+         //valore=valore/100; // AHEM
+         if (divi.value!="") valore=valore/eval(divi.value);
+         v1.value=series[0];
+         v2.value=series[1];
+         nar=[ctr,valore];
+         data.push(nar);
+         plot.setData([data]);
+         plot.setupGrid();
+         plot.draw();
+      
+           }
+          
+      // setup control widget
+      var updateInterval = 11999;
+      $("#updateInterval").val(updateInterval).change(function () {
+          var v = $(this).val();
+          if (v && !isNaN(+v)) {
+              updateInterval = +v;
+              if (updateInterval < 1)
+                  updateInterval = 1;
+              if (updateInterval > 60000)
+                  updateInterval = 60000;
+              $(this).val("" + updateInterval);
+          }
+      });
+   
+      // setup plot
+      var options = {
+          series: { shadowSize: 0 }, // drawing is faster without shadows
+          //yaxis: { min: 1.4030, max: 1.42 },
+          yaxis: { },
+          xaxis: { show: false }
+      };
+      var plot = $.plot($("#placeholder"), [ data ], options);
+         plot.setupGrid();
+ plot.draw();
+ 
+ 
+      function update() {
+          //alert(document.getElementsByTagName('select')[0].value);
+ $.ajax({
+         url: urlbase+document.getElementById("inst1").value+"/"+document.getElementById("inst2").value,
+         method: 'GET',
+         dataType: 'json',
+         success: onDataReceived
+     });
+  setTimeout(update, updateInterval);
+      }
+     
+       update();
+ 
+      
+  });
+  </script> 
+   
+   </body> 
+  </html>
+
