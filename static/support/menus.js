@@ -131,7 +131,7 @@ gridwin=Ext.create('Ext.window.Window', {
         fields: ['abbr', 'state'],
         data : Ext.example.states
     });
-
+/*
     var combo = Ext.create('Ext.form.field.ComboBox', {
         hideLabel: true,
         store: store,
@@ -144,7 +144,7 @@ gridwin=Ext.create('Ext.window.Window', {
         width: 135,
         iconCls: 'no-icon'
     });
-
+*/
     var menu = Ext.create('Ext.menu.Menu', {
         id: 'mainMenu',
         style: {
@@ -404,80 +404,153 @@ tb.add("-",{
 					{
                         title: 'End of day Symbol List',
                         html: '<iframe src="http://50.19.35.22:8001/quote_grid.php" width=100% height=100%></iframe>'
+                    },
+					{
+                        title: 'Import CSV',
+						     bodyStyle: 'padding: 5px;',
+                        xtype:"panel",
+						
+						items: [
+                {
+                    xtype: 'radiogroup',
+                    width: 400,
+                    fieldLabel: 'Separator',
+                    items: [
+                        {
+                            xtype: 'radiofield',
+                            boxLabel: 'Comma'
+                        },
+                        {
+                            xtype: 'radiofield',
+                            boxLabel: 'Space'
+                        },
+                        {
+                            xtype: 'radiofield',
+                            boxLabel: 'Semicolon'
+                        }
+                    ]
+                },
+                {
+                    xtype: 'textfield',
+                    width: 360,
+                    fieldLabel: 'URL:'
+                }
+            ],
+            dockedItems: [
+                {
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+                    layout: {
+                        pack: 'end',
+                        type: 'hbox'
+                    },
+                    items: [
+                        {
+                            xtype: 'button',
+                            text: 'Import'
+                        },
+                        {
+                            xtype: 'button',
+                            text: 'cancel'
+                        }
+                    ]
+                }
+            ]
+						
                     }]
                 }]
             });
 
  sce_win = Ext.create('widget.window', {
-				x:300,
-                title: 'Script Editor',
-                closable: true,
-                closeAction: 'hide',
-                //animateTarget: this,
-                width: 600,
-                height: 350,
-                layout: 'border',
-                bodyStyle: 'padding: 5px;',
-				                  bbar:[ {xtype: 'tbfill'},
-                           {
-                                 xtype:'button',
-                                 text:'Execute',
-                                 name:'vv',
-                                 id:'vv',
-                                 tooltip:'Execute this script immediately',
-                                 handler: function(){
-								                    Ext.example.msg('Executing', 'Executing Scrathpad contents.');
-													eval(top.script1.value);
-                                               }
-                            },
-							                                { xtype:'button',
-                                 text:'Save',
-                                 name:'vvws',
-                                 id:'vvws',
-                                 tooltip:'Click here to save this script',
-                                 handler: function(){
-                                                  Ext.example.msg('Warning', 'Function is not yet implemented');
-												  
-                                               }
-                            }
-							
-                    ],
-                items: [{
-                    region: 'west',
-                    title: 'Help',
-                    width: 150,
-                    split: true,
-                    collapsible: true,
-					html:"<div style='padding:6px'><a href='http://fe/reference/executeCommand'>Click here for a command syntax reference.</a></div>",
-                    floatable: true
-                }, {
-                    region: 'center',
-                    xtype: 'tabpanel',
-                    items: [ {
-                        title: 'Scratchpad',
-                        xtype:'textarea' ,
-							id:'script1',
-							listeners: {
-afterrender: function(){
-var me = this;
-me.el.swallowEvent(['keypress','keydown' ]);
-}
-}
-							//html: '<textarea id="script1" style="width:100%;height:100%"></textarea>'
-                    },
-					{
-                        title: 'onRefresh',
-                        html: '<textarea id="script2" style="width:100%;height:100%">2</textarea>'
-                    },
-					{
-                        title: 'onOpen',
-                        html: '<textarea id="script3" style="width:100%;height:100%">3</textarea>'
-                    }
-					
-					
-					]
-                }]
-            });			
+     x: 110,
+     title: 'Script Editor',
+	 maximizable: true,
+     closable: true,
+     closeAction: 'hide',
+     //animateTarget: this,
+     width: 600,
+     height: 350,
+     layout: 'border',
+     bodyStyle: 'padding: 5px;',
+     bbar: [{
+             xtype: 'tbfill'
+         }, {
+             xtype: 'button',
+             text: 'Execute',
+             name: 'vv',
+             id: 'vv',
+             tooltip: 'Execute this script immediately',
+             handler: function () {
+                 Ext.example.msg('Executing', 'Executing Scrathpad contents.');
+                 eval(top["script1-inputEl"].value);
+             }
+         }, {
+             xtype: 'button',
+             text: 'Save',
+             name: 'vvws',
+             id: 'vvws',
+             tooltip: 'Click here to save this script',
+             handler: function () {
+			     localStorage.setItem( 'script1', top["script1-inputEl"].value);
+			     localStorage.setItem( 'script2', top["script2-inputEl"].value);
+			     localStorage.setItem( 'script3', top["script3-inputEl"].value);
+				 
+                 Ext.example.msg('Warning', 'Function is not yet implemented');
+
+             }
+         }
+
+     ],
+     items: [{
+             region: 'west',
+             title: 'Help',
+             width: 150,
+             split: true,
+             collapsible: true,
+             html: "<div style='padding:6px'><a href='http://fe/reference/executeCommand'>Click here for a command syntax reference.</a></div>",
+             floatable: true
+         }, {
+             region: 'center',
+             xtype: 'tabpanel',
+             items: [{
+                     title: 'Scratchpad',
+                     xtype: 'textarea',
+					 emptyText:"Write your script here",
+					 value:localStorage.getItem('script1'),
+                     id: 'script1',
+                     listeners: {
+                         afterrender: function () {
+                             var me = this;
+                             me.el.swallowEvent(['keypress', 'keydown']);
+                         }
+                     }
+                 }, {
+                     title: 'onRefresh',
+                     xtype: 'textarea',
+                     id: 'script2',
+                     listeners: {
+                         afterrender: function () {
+                             var me = this;
+                             me.el.swallowEvent(['keypress', 'keydown']);
+                         }
+                     }
+                 }, {
+                     title: 'onOpen',
+                     xtype: 'textarea',
+                     id: 'script3',
+                     listeners: {
+                         afterrender: function () {
+                             var me = this;
+                             me.el.swallowEvent(['keypress', 'keydown']);
+                         }
+                     }
+                 }
+
+
+             ]
+         }
+     ]
+ });	
 			
  sc_win = Ext.create('widget.window', {
      x: 50,
@@ -513,7 +586,7 @@ me.el.swallowEvent(['keypress','keydown' ]);
 onRToggle = function() { ld_win.show();};
 
   function onGenToggle(item, pressed) {
-  if (item.text == "Live Data Sources") { if (pressed) ld_win.show(); else ld_win.hide(); }
+  if (item.text == "Data Sources") { if (pressed) ld_win.show(); else ld_win.hide(); }
   if (item.text == "R integration") { if (pressed) r_win.show(); else r_win.hide(); }
   if (item.text == "Live Alerts") { if (pressed) alerts_win.show(); else alerts_win.hide(); }
   if (item.text == "Console") { if (pressed) sc_win.show(); else sc_win.hide(); }
@@ -539,7 +612,7 @@ onRToggle = function() { ld_win.show();};
     }, '-');
 	
 	    tb.add({
-        text: 'Live Data Sources',
+        text: "Data Sources",
 		tooltip: 'Browse available live data series',
         enableToggle: true,
 		id:"ldSHOW",
@@ -549,7 +622,7 @@ onRToggle = function() { ld_win.show();};
 	
 	
 		    tb.add({ 
-        text: 'R integration',
+        text: "R integration",
 		        tooltip: 'Show specific R help',
         enableToggle: true,
 		id:"rSHOW", 
