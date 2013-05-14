@@ -6,6 +6,8 @@
 	//this.app.use(this.express.static(__dirname + "/static"));
 	this.app.use("/resources", this.express.static(__dirname + "/static"));
 	this.app.use("/js-repl", this.express.static(__dirname + "/js-repl"));
+	this.app.set('views', __dirname + '/views');
+    this.app.set('view engine', 'ejs');
 	console.log("__dirname:" + __dirname);
     this.include('dotcloud');
     this.include('player-broadcast');
@@ -218,6 +220,57 @@
         });
       }
     });
+
+	
+	    this.get({
+      '/_/:room/recalcc/:cell': api(function(){
+        var this$ = this;
+        return [
+          Json, function(sc, cb){
+            return sc.exportCell(this$.cell, cb);
+          }
+        ];
+      })
+    });
+
+	    this.get({
+      '/_/:room/recalc/:cell': api(function(){
+        var this$ = this;
+		        var room, command, this$ = this;
+   
+        command = ["recalc"];
+		SC[this.room].ExecuteCommand("recalc\n");
+		
+		
+		//console.log(sys.inspect(SC["c"])); 
+
+
+      return [
+          Json, function(sc, cb){
+
+/*		  
+SC._get(room, IO, function(){
+          var ref$;
+          if ((ref$ = SC[room]) != null) {
+            ref$.ExecuteCommand(join$.call(command, '\n'));
+          }
+          IO.sockets['in']("log-" + room).emit('data', {
+            type: 'execute',
+            cmdstr: join$.call(command, '\n'),
+            room: room
+          });
+          return sc.exportCell(this$.cell, cb)["datavalue"];
+        }); 
+  */ 
+            return sc.exportCell(this$.cell, cb);
+          }
+        ];
+        
+  
+      })
+    });
+		
+	
     this.post({
       '/test/:room': function(){
         var room, csv, recnum, curcel, this$ = this;
@@ -315,6 +368,14 @@ return ("ok");
 
       }
     });
+	
+	this.all('/rtgfx/:uno/:due', function(req, res){
+console.log("rtgfx/");
+//console.log(sys.inspect(this)); 
+//res.render('rt_chart.ejs', {layout:false,locals:{para:req.params,uno:req.params.uno,due:req.params.due}});
+this.render('rt_chart.ejs', {layout:false,locals:{para:this.req.params,uno:this.req.params.uno,due:this.req.params.due}});
+});
+
 
 
 

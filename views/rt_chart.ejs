@@ -5,8 +5,8 @@
       <title><%= uno %>-<%= due %></title> 
       <link href="layout.css" rel="stylesheet" type="text/css"> 
       <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]--> 
-      <script language="javascript" type="text/javascript" src="/js/jquery.js"></script> 
-      <script language="javascript" type="text/javascript" src="/js/jquery.flot.js"></script> 
+      <script language="javascript" type="text/javascript" src="/static/support/jquery.js"></script> 
+      <script language="javascript" type="text/javascript" src="/static/support/jquery.flot.js"></script> 
    </head> 
       <body> 
    
@@ -63,7 +63,8 @@ function clean()  {
   $(function () {
       var data = [], totalPoints = 300;
       var ctr =0;
-      urlbase = "http://192.168.0.127:3001/HMGET/quotes/";
+      //urlbase = "http://23.20.49.70:8002/_/c/recalc/A1";
+	  urlbase = "/_/c/recalc/A1";
       v1=document.getElementById("val1");
       v2=document.getElementById("val2");
       divitxt=document.getElementById("divi");
@@ -98,14 +99,11 @@ function clean()  {
          //plot.setData([document.getElementById("dbg").value.split(",") ]);
          // since the axes don't change, we don't need to call plot.setupGrid()
          ctr++;
-         if (document.getElementById("op").value=="-")
-            valore=eval("("+series[0]+")")-eval("("+series[1]+")");
-        else
-            valore=eval("("+series[0]+")")/eval("("+series[1]+")");
-         
+
+			//console.log(series);
          
          //valore=valore/100; // AHEM
-         if (divi.value!="") valore=valore/eval(divi.value);
+         valore=series.datavalue;
          v1.value=series[0];
          v2.value=series[1];
          nar=[ctr,valore];
@@ -145,7 +143,7 @@ function clean()  {
       function update() {
           //alert(document.getElementsByTagName('select')[0].value);
  $.ajax({
-         url: urlbase+document.getElementById("inst1").value+"/"+document.getElementById("inst2").value,
+         url: urlbase,
          method: 'GET',
          dataType: 'json',
          success: onDataReceived
