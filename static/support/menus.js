@@ -99,6 +99,11 @@ gridwin=Ext.create('Ext.window.Window', {
     function onButtonClick(btn){
         Ext.example.msg('Button Click','You clicked the "{0}" button.', btn.text);
     }
+	
+	function onChartReq(btn){
+	    charts_win.show();
+        Ext.example.msg('Button Click','You clicked the "{0}" button.', btn.text);
+    }
 
     function onItemClick(item){
         Ext.example.msg('Menu Click', 'You clicked the "{0}" menu item.', item.text);
@@ -195,6 +200,13 @@ tb.add("-",{
         enableToggle: true,
         toggleHandler: onRadioToggle,
         pressed: false
+    },"-");
+	
+	tb.add({
+        text: 'RT Chart', 
+		tooltip: {text:'Click to chart the contents on the current cells', title:'Realtime Chart'},
+        handler: onChartReq,
+ 
     },"-");
 
 /*
@@ -340,7 +352,54 @@ tb.add("-",{
                 }]
             });
 	
-
+ charts_win = Ext.create('widget.window', {
+    "xtype": "window",
+    "height": 222,
+    "width": 400,
+    "title": "New realtime chart",
+    "modal": true,
+    "items": [
+        {
+            "xtype": "form",
+            "layout": {
+                "type": "auto"
+            },
+            "bodyPadding": 10,
+            "title": "Pick a name and color",
+            "items": [
+                {
+                    "xtype": "textfield",
+                    "minWidth": 300,
+                    "width": 300,
+                    "fieldLabel": "Name:",
+                    "labelWidth": 64
+                },
+                {
+                    "xtype": "colormenu",
+                    "floating": false
+                }
+            ]
+        }
+    ],
+    "dockedItems": [
+        {
+            "xtype": "toolbar",
+            "dock": "bottom",
+            "items": [
+                {
+                    "xtype": "button",
+                    "text": "Create Chart"
+                },
+                {
+                    "xtype": "button",
+                    "text": "cancel"
+                }
+            ]
+        }
+    ]
+}
+);
+	
  r_win = Ext.create('widget.window', {
 				x:150,
                 title: 'R integration',
