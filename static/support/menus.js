@@ -7,6 +7,7 @@ Ext.require([
 	    'Ext.tab.*',
     'Ext.window.*',
     'Ext.tip.*',
+	'Ext.grid.*',
     'Ext.layout.container.Border'
 ]);
 
@@ -101,8 +102,10 @@ gridwin=Ext.create('Ext.window.Window', {
     }
 	
 	function onChartReq(btn){
+	    //console.log(top.spreadsheet.editor.ecell.coord);
+		//console.log(btn);
 	    charts_win.show();
-        Ext.example.msg('Button Click','You clicked the "{0}" button.', btn.text);
+		top["charts_name_txt-inputEl"].value=top.spreadsheet.editor.ecell.coord;
     }
 
     function onItemClick(item){
@@ -268,7 +271,7 @@ tb.add("-",{
         // disabled: true   <-- allowed but for sake of example we use long way below
     });
     // access items by id or index
-    menu.items.get('disableMe').disable();
+    //menu.items.get('disableMe').disable();
 
 
 
@@ -289,7 +292,7 @@ tb.add("-",{
         text: 'Other Sheets',
         menu: scrollMenu 
     });
-	*/
+	*/ /*
 		    tb.add({
         text: 'Show Charts',
 		        tooltip: 'Show charts/graphs window',
@@ -298,12 +301,12 @@ tb.add("-",{
 		        toggleHandler: onSToggle,
         pressed: false
     },"-");
-
+*/
     tb.add({
         text: 'Help',
-        url: '/help',
+        url: 'http://livecalc.uservoice.com/knowledgebase',
         baseParams: {
-            q: 'there+is+no+help'
+            q: 'urlparam'
         },
         tooltip: 'Click here for help.'
     });
@@ -321,6 +324,27 @@ tb.add("-",{
         width:135
     });
     tb.add("-",combo);
+	
+	sentalertstore =  Ext.create('Ext.data.ArrayStore', 	{
+fields: [
+{name:"Sent",type:"string"},{name:"Content",type:"string"}
+]
+, data: [
+['01012014', 'Alert logging not yet implemented'],
+['---', '--']
+]
+}
+); 
+	alertstore =  Ext.create('Ext.data.ArrayStore', {
+fields: [
+{name:"Cell",type:"string"},{name:"Contents",type:"string"}
+]
+, data: []
+});
+
+	
+	
+	
 	
  alerts_win = Ext.create('widget.window', {
                 x:100,
@@ -343,18 +367,28 @@ tb.add("-",{
                     region: 'center',
                     xtype: 'tabpanel',
                     items: [{
-                        title: 'Existing Alerts',
-                        html: 'Insert list here'
+		id:'alert_grid_exist',			
+		title: 'Existing alerts',
+        xtype: 'grid',
+		forceFit:true,
+        emptyText: '<span class="emptyText" style="position:absolute;left:10px;top:10px">No rows found.</span>',
+        border: false,
+        columns: [{text:"prova",flex:1,header: 'Cell',dataIndex:"Cell"},{header: 'Contents',dataIndex:"Contents",width:80}],              
+        store: alertstore
                     }, {
-                        title: 'Sent Alerts',
-                        html: 'TBD'
-                    }]
+		id:'alert_grid_sent',			
+		title: 'Sent alerts',
+        xtype: 'grid',
+		forceFit:true,
+        border: false,
+        columns: [{header: 'Sent',dataIndex:'Sent',flex:1},{header: 'Content',dataIndex:"Content",flex:1}],              
+        store:sentalertstore                  }]
                 }]
             });
 	
  charts_win = Ext.create('widget.window', {
     "xtype": "window",
-    "height": 222,
+    "height": 242,
     "width": 400,
     "title": "New realtime chart",
     "modal": true,
@@ -364,19 +398,30 @@ tb.add("-",{
             "layout": {
                 "type": "auto"
             },
-            "bodyPadding": 10,
+            "bodyPadding": 8,
             "title": "Pick a name and color",
             "items": [
                 {
                     "xtype": "textfield",
+					"id":"charts_name_txt",
                     "minWidth": 300,
-                    "width": 300,
-                    "fieldLabel": "Name:",
+                    "width": 340,
+                    "fieldLabel": "Cell:",
                     "labelWidth": 64
                 },
                 {
+                    "xtype": "textfield",
+					"bodyPadding": 8,
+					"id":"charts_title_txt",
+                    "minWidth": 300,
+                    "width": 340,
+                    "fieldLabel": "Title (opt.):",
+                    "labelWidth": 64
+                },				
+                {
                     "xtype": "colormenu",
-                    "floating": false
+                    "floating": false,
+					
                 }
             ]
         }
@@ -385,20 +430,43 @@ tb.add("-",{
         {
             "xtype": "toolbar",
             "dock": "bottom",
+			 layout: {
+                        pack: 'end',
+                        type: 'hbox'
+                    },
             "items": [
+
                 {
                     "xtype": "button",
-                    "text": "Create Chart"
+                    "text": "cancel",
+					"handler":function(__btn,__event){ charts_win.hide();  }
                 },
                 {
                     "xtype": "button",
-                    "text": "cancel"
+                    "text": "Create Chart",
+					"handler":function(__btn,__event){ window.open("/rtgfx/"+window.top.SocialCalc._room+"/"+top["charts_name_txt-inputEl"].value,"chart"+top["charts_name_txt-inputEl"].value,"menubar=1,resizable=1,width=350,height=250")} 
                 }
             ]
         }
     ]
 }
 );
+
+function refreshAlerts(){
+//Ext.getCmp("alert_grid_exist").removeAll();
+Ext.getCmp("alert_grid_exist").store.remove(Ext.getCmp("alert_grid_exist").store.getRange());
+var tctr=0;
+for (each in window.top.SocialCalc.GetSpreadsheetControlObject().sheet.cells)
+{
+var tmpv =  window.top.SocialCalc.GetSpreadsheetControlObject().sheet.cells[each].formula;
+if ( tmpv.indexOf("EMAIL")>-1 || tmpv.indexOf("TWEET")>-1 ) {
+Ext.getCmp("alert_grid_exist").store.add({Cell:each,Contents:tmpv});
+tctr++;}
+}
+if (tctr == 0)
+Ext.getCmp("alert_grid_exist").store.add({Cell:"---",Contents:"There are no configured alerts on this sheet."});
+}
+
 	
  r_win = Ext.create('widget.window', {
 				x:150,
@@ -658,7 +726,7 @@ onRToggle = function() { ld_win.show();};
   function onGenToggle(item, pressed) {
   if (item.text == "Data Sources") { if (pressed) ld_win.show(); else ld_win.hide(); }
   if (item.text == "R integration") { if (pressed) r_win.show(); else r_win.hide(); }
-  if (item.text == "Live Alerts") { if (pressed) alerts_win.show(); else alerts_win.hide(); }
+  if (item.text == "Live Alerts") { refreshAlerts(); if (pressed) alerts_win.show(); else alerts_win.hide();  }
   if (item.text == "Console") { if (pressed) sc_win.show(); else sc_win.hide(); }
   if (item.text == "Scripts") { if (pressed) sce_win.show(); else sce_win.hide(); }
     }

@@ -38,6 +38,76 @@
         return this.response.sendfile(RealBin + "/" + file);
       };
     };
+	
+		this.all('/slurpcsv/:room/', function(req, myres){
+		        var room, this$ = this;
+				var recnum=0;
+				var csv,curcel,csvstr="";
+        room = this.params.room;
+		console.log("slurpcsv/");
+		var request = require('request');
+		//request.get('http://fe:8001/d/test.csv', function (error, response, body) {
+		request.get('http://www.ijis.iarc.uaf.edu/seaice/extent/plot.csv', function (error, response, body) {
+		//request.get('http://aima.cs.berkeley.edu/data/iris.csv', function (error, response, body) {
+		if (!error && response.statusCode != 1200) {
+			var csv = body;
+			//console.log(csv);
+			var fs = require('fs');
+				fs.writeFile("/tmp/test", csv, function(err) {
+					if(err) {
+						console.log(err);
+					} else {
+						console.log("The file was saved!");
+						
+								var reader = CSV.createCsvFileReader("/tmp/test", {
+		    'separator': ',',
+		    'quote': '"',
+		    'escape': '"',       
+		    'comment': '',
+		});
+reader.addListener('data', function(data) {
+   console.log(data);
+   recnum++;
+   csvstr="";
+for (x in data) { 
+            //console.log(colnames);
+            console.log(recnum);
+            //console.log(colnames);
+			
+			curcel = colnames[x]+recnum ; csvstr+="set "+curcel+" value t "+data[x]+"\n";  
+			//this.SC[this.room].ExecuteCommand("set "+curcel+" value t "+data[x]+"\n");
+	}		
+			 SC._get(room, IO, function(){
+		          var ref$;
+		          if ((ref$ = SC[room]) != null) {
+		            //console.log("executing");
+		            ref$.ExecuteCommand(csvstr);
+                            console.log("TRYING :"+csvstr);
+		          }
+	                      //console.log("emitting");
+		          IO.sockets['in']("log-" + room).emit('data', {
+		            type: 'execute',
+		            cmdstr: csvstr,
+		            room: room
+		          });
+			}); 
+	
+console.log(sys.inspect(SC));	
+});
+
+						
+						
+					}
+				});
+			//this.myres.send(csv);
+
+		}
+console.log(sys.inspect(this.myres));
+});
+console.log(sys.inspect("test"));
+return("OK");
+});
+	
     this.get({
       '/': sendFile('index.html')
     });

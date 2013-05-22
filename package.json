@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "ya-csv": "*",
+    "request": "*",
     "redis": "*",
     "uuid-pure": "*",
     "optimist": "*",

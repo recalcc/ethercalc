@@ -11,6 +11,7 @@
       <body> 
    
       <div id="placeholder" style="width:1120px;height:600px;"></div> 
+	  <div style="display:none">
    <input type="text" name="inst1" id="inst1" value="<%= uno %>">
 
    <input type="text" name="inst2" id="inst2" value="<%= due %>">
@@ -19,14 +20,15 @@
    <input type="button" name="dbgb" id="dbgb" onclick="clean();" />
    <a href="#" onclick="clean();">clean</a>
    
-<a href="/spreadem/<%= uno %>/<%= due %>">permalink</a><br>
+
 
    <input type="text" name="val1" id="val1" value="<%= uno %>">
 
 <input type="text" name="val2" id="val2" value="<%= due %>">
 
 
-<input type="text" name="divi" id="divi" value="" class="target" /> div
+<input type="text" name="divi" id="divi" value="" class="target" /> 
+</div>
 
 <script>
 
@@ -64,7 +66,7 @@ function clean()  {
       var data = [], totalPoints = 300;
       var ctr =0;
       //urlbase = "http://23.20.49.70:8002/_/c/recalc/A1";
-	  urlbase = "/_/c/recalc/A1";
+	  urlbase = "/_/<%= uno %>/recalc/<%= due %>";
       v1=document.getElementById("val1");
       v2=document.getElementById("val2");
       divitxt=document.getElementById("divi");
@@ -115,7 +117,7 @@ function clean()  {
            }
           
       // setup control widget
-      var updateInterval = 11999;
+      var updateInterval = 5000;
       $("#updateInterval").val(updateInterval).change(function () {
           var v = $(this).val();
           if (v && !isNaN(+v)) {
