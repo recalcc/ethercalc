@@ -39,6 +39,11 @@
       };
     };
 	
+	isNumber = function(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+	
+	
 		this.all('/slurpcsv/:room/', function(req, myres){
 		        var room, this$ = this;
 				var recnum=0;
@@ -47,8 +52,8 @@
 		console.log("slurpcsv/");
 		var request = require('request');
 		//request.get('http://fe:8001/d/test.csv', function (error, response, body) {
-		request.get('http://www.ijis.iarc.uaf.edu/seaice/extent/plot.csv', function (error, response, body) {
-		//request.get('http://aima.cs.berkeley.edu/data/iris.csv', function (error, response, body) {
+		//request.get('http://www.ijis.iarc.uaf.edu/seaice/extent/plot.csv', function (error, response, body) {
+		request.get('http://aima.cs.berkeley.edu/data/iris.csv', function (error, response, body) { 
 		if (!error && response.statusCode != 1200) {
 			var csv = body;
 			//console.log(csv);
@@ -68,14 +73,16 @@
 reader.addListener('data', function(data) {
    console.log(data);
    recnum++;
+   console.log(recnum);
    csvstr="";
 for (x in data) { 
             //console.log(colnames);
-            console.log(recnum);
+            
             //console.log(colnames);
-			
+			if (isNumber(data[x])) {
 			curcel = colnames[x]+recnum ; csvstr+="set "+curcel+" value t "+data[x]+"\n";  
 			//this.SC[this.room].ExecuteCommand("set "+curcel+" value t "+data[x]+"\n");
+			}
 	}		
 			 SC._get(room, IO, function(){
 		          var ref$;
@@ -92,7 +99,7 @@ for (x in data) {
 		          });
 			}); 
 	
-console.log(sys.inspect(SC));	
+//console.log(sys.inspect(SC));	
 });
 
 						
@@ -107,6 +114,33 @@ console.log(sys.inspect(this.myres));
 console.log(sys.inspect("test"));
 return("OK");
 });
+	
+		this.all('/proxy', function(req, myres){
+		        var room, this$ = this;
+				var recnum=0;
+				var csv,curcel,csvstr="";
+        room = this.params.room;
+		console.log("slurpcsv/");
+		var request = require('request');
+		//request.get('http://fe:8001/d/test.csv', function (error, response, body) {
+		//request.get('http://www.ijis.iarc.uaf.edu/seaice/extent/plot.csv', function (error, response, body) {
+		return(request.get(this.req.query.hlocation, function (error, hresponse, body) { 
+		if (!error && hresponse.statusCode != 1200) {
+			var csv = body;
+			console.log(csv);
+			 return this$.response.send(csv);
+			return(csv);
+			 //return this.response.send(200, csv);
+		}
+//console.log(sys.inspect(this.myres));
+}));
+console.log(sys.inspect(this.req.query));
+     return this.response.send(200, csv);
+//return(csv);
+});
+
+	
+	
 	
     this.get({
       '/': sendFile('index.html')

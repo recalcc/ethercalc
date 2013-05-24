@@ -444,7 +444,7 @@ fields: [
                 {
                     "xtype": "button",
                     "text": "Create Chart",
-					"handler":function(__btn,__event){ window.open("/rtgfx/"+window.top.SocialCalc._room+"/"+top["charts_name_txt-inputEl"].value,"chart"+top["charts_name_txt-inputEl"].value,"menubar=1,resizable=1,width=350,height=250")} 
+					"handler":function(__btn,__event){ window.open("/rtgfx/"+window.top.SocialCalc._room+"/"+top["charts_name_txt-inputEl"].value,"chart"+top["charts_name_txt-inputEl"].value,"menubar=1,resizable=1,width=750,height=350");charts_win.hide();} 
                 }
             ]
         }
