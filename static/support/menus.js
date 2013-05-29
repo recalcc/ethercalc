@@ -8,8 +8,11 @@ Ext.require([
     'Ext.window.*',
     'Ext.tip.*',
 	'Ext.grid.*',
-    'Ext.layout.container.Border'
+    'Ext.layout.container.Border',
+	'Ext.chart.*'
 ]);
+
+colnames = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK"];
 
 Ext.onReady(function(){
 
@@ -108,6 +111,49 @@ gridwin=Ext.create('Ext.window.Window', {
 		top["charts_name_txt-inputEl"].value=top.spreadsheet.editor.ecell.coord;
     }
 
+	function import_clicked(a,b) {
+	 // CSVURLtxt-inputEl.value e' la url
+	    Importcsv("1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n1,2,3,4,5\na,b,v,d,e\n");
+	}
+	
+	function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+	
+	function Importcsv(content)
+	{
+	carr = CSVToArray( content, "," );
+	var tmp="";
+	var c_str="";
+	var row=0;
+	var csvel="";
+	for (cl in carr) {
+	    row++;
+		for (col in carr[cl]) {
+		if (carr[cl].length > 0) {
+		csvel=carr[cl][col];
+		if (isNumber(csvel)) {
+		console.log(cl+"."+col+":"+csvel);
+		c_str=c_str+"set "+colnames[col]+(row)+" value n "+csvel+"\n";
+		console.log("set "+colnames[col]+(row)+" value n "+csvel+"\n");
+		}
+		else
+		{
+		if (csvel!="") {
+		console.log("NAN:"+cl+"."+col+":"+csvel);
+		c_str=c_str+"set "+colnames[col]+(row)+" text t "+csvel+"\n";
+		console.log("set "+colnames[col]+(row)+" text t "+csvel+"\n");		
+		}
+		}
+		}
+		}
+	
+	}
+	window.top.spreadsheet.ExecuteCommand(c_str,"");
+	console.log("executing\n"+c_str);
+	}
+	
+	
     function onItemClick(item){
         Ext.example.msg('Menu Click', 'You clicked the "{0}" menu item.', item.text);
     }
@@ -540,6 +586,7 @@ Ext.getCmp("alert_grid_exist").store.add({Cell:"---",Contents:"There are no conf
 						items: [
                 {
                     xtype: 'radiogroup',
+					id:"CSVSEPtxt",
                     width: 400,
                     fieldLabel: 'Separator',
                     items: [
@@ -560,6 +607,7 @@ Ext.getCmp("alert_grid_exist").store.add({Cell:"---",Contents:"There are no conf
                 {
                     xtype: 'textfield',
                     width: 372,
+					id:"CSVURLtxt",
                     fieldLabel: 'insert URL:'
                 },
 				{
@@ -585,7 +633,8 @@ Ext.getCmp("alert_grid_exist").store.add({Cell:"---",Contents:"There are no conf
                     items: [
                         {
                             xtype: 'button',
-                            text: 'Import'
+                            text: 'Import',
+							handler:import_clicked
                         },
                         {
                             xtype: 'button',

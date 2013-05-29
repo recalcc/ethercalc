@@ -17,6 +17,8 @@
     }
     redisHost == null && (redisHost = 'localhost');
     redisPort == null && (redisPort = 8040);
+//    redisHost == null && (redisHost = '10.244.141.239'); //BEI
+//    redisPort == null && (redisPort = 8012);
     dataDir == null && (dataDir = process.cwd());
     db = require('redis').createClient(redisPort, redisHost);
     if (redisPass) {

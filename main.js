@@ -77,12 +77,18 @@ reader.addListener('data', function(data) {
    csvstr="";
 for (x in data) { 
             //console.log(colnames);
-            
+            if (data[x] != "") {
             //console.log(colnames);
 			if (isNumber(data[x])) {
 			curcel = colnames[x]+recnum ; csvstr+="set "+curcel+" value t "+data[x]+"\n";  
 			//this.SC[this.room].ExecuteCommand("set "+curcel+" value t "+data[x]+"\n");
 			}
+			else
+			{
+			curcel = colnames[x]+recnum ; csvstr+="set "+curcel+" text t "+data[x]+"\n";  
+			}
+			}
+			
 	}		
 			 SC._get(room, IO, function(){
 		          var ref$;
